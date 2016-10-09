@@ -20,7 +20,8 @@ def main():
     if(request.form['token'] != 'O8s7mBAq8Q3HvFj9lghw6RVI'):
         return 'not slack!'
     values = {}
-    values[team_id] = request.form['team_id']
+    team_domain = request.form['team_domain']
+'''
     values[team_domain] = request.form['team_domain']
     values[channel_id] = request.form['channel_id']
     values[channel_name] = request.form['channel_name']
@@ -28,7 +29,8 @@ def main():
     values[user_name] = request.form['user_name']
     values[command] = request.form['command']
     values[text] = request.form['text']
-    return values
+    '''
+    return team_id
 
 def load():
     cursor = app.mysql.connection.cursor()
