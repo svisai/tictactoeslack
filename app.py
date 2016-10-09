@@ -21,7 +21,8 @@ def main():
         return 'not slack!'
     values = {}
     team_domain = request.form['team_domain']
-'''
+    return team_id
+    '''
     values[team_domain] = request.form['team_domain']
     values[channel_id] = request.form['channel_id']
     values[channel_name] = request.form['channel_name']
@@ -30,7 +31,6 @@ def main():
     values[command] = request.form['command']
     values[text] = request.form['text']
     '''
-    return team_id
 
 def load():
     cursor = app.mysql.connection.cursor()
