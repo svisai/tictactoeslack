@@ -34,9 +34,11 @@ def main():
     
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     if cursor.fetchone() is None:
+        print "hi"
         cursor.execute("INSERT INTO team (team_key, team_domain) VALUES ('{0}', '{1}')".format(teamkey, team_domain))
 
-    teamid = cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    teamid = cursor.fetchone()
 
     cursor.execute("SELECT * FROM channel WHERE channel_key = '{0}'".format(channelkey))
     if cursor.fetchone() is None:
@@ -46,8 +48,10 @@ def main():
     if cursor.fetchone() is None:
         cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, '{3}', '{4}')".format(userkey, 0, 0, 0, teamid, user_name))
     
-    channelid = cursor.execute("SELECT channel_id FROM channel WHERE team_id = '{0}' AND channel_key = '{1}'".format(teamid, channelkey))
-    startplayer = cursor.execute("SELECT player_id FROM player WHERE team_id = '{0}' AND player_KEY = '{1}'".format(teamid, userkey))
+    cursor.execute("SELECT channel_id FROM channel WHERE team_id = '{0}' AND channel_key = '{1}'".format(teamid, channelkey))
+    channelid = cursor.fetchone()
+    cursor.execute("SELECT player_id FROM player WHERE team_id = '{0}' AND player_KEY = '{1}'".format(teamid, userkey))
+    startplayer = cursor.fetchone()
 
     cursor.execute("SELECT * FROM game WHERE channel_id = '{0}' AND start_player = '{1}'".format(channelid, startplayer))
     if cursor.fetchone() is None:
