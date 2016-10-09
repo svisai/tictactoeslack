@@ -31,7 +31,7 @@ def main():
     text = request.form['text']
     
     cursor = app.mysql.connection.cursor()
-    cursor.execute("INSERT INTO team (team_id) VALUES {0}".format(team_id))
+    cursor.execute("INSERT INTO team (team_id) VALUES ({0})".format(team_id))
     return 'Welcome to your tic tac toe game! Make your first move'
 
 def load():
