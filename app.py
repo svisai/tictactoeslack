@@ -1,7 +1,6 @@
 from flask import Flask, render_template, json, request
 from flask_mysqldb import MySQL
 import os
-import celery
 
 app = Flask(__name__)
 
