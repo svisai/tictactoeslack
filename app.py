@@ -33,6 +33,7 @@ def main():
     cursor = app.mysql.connection.cursor()
 
     cursor.execute("INSERT INTO team (team_key, team_domain) VALUES ('test', 'test')")
+    app.mysql.connection.commit();
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     if cursor.fetchone() is None:
         print "hi"
