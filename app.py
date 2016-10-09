@@ -21,7 +21,7 @@ def main():
         return 'Forbidden'
     
     values = {}
-    team_id = request.form['team_id']
+    teamid = request.form['team_id']
     team_domain = request.form['team_domain']
     channel_id = request.form['channel_id']
     channel_name = request.form['channel_name']
@@ -31,7 +31,7 @@ def main():
     text = request.form['text']
     
     cursor = app.mysql.connection.cursor()
-    cursor.execute("INSERT INTO team (team_id) VALUES (%s)", (team_id))
+    cursor.execute("INSERT INTO team (team_id) VALUES ({0})".format(teamid))
     return 'Welcome to your tic tac toe game! Make your first move'
 
 def load():
