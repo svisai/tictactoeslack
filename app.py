@@ -32,7 +32,7 @@ def main():
     
     cursor = app.mysql.connection.cursor()
     
-    exist = cursor.execute("SELECT EXISTS(SELECT team_key FROM team WHERE team_key = {0})".format(teamkey))
+    exist = cursor.execute("SELECT team_id FROM team WHERE team_key = {0}".format(teamkey))
     if exist == 0:
         cursor.execute("INSERT INTO team (team_key, team_domain) VALUES ({0}, {1})".format(teamkey, team_domain))
 
