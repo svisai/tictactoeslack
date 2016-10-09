@@ -39,6 +39,7 @@ def main():
 
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     teamid = cursor.fetchone()
+    print(teamid)
 
     cursor.execute("SELECT * FROM channel WHERE channel_key = '{0}'".format(channelkey))
     if cursor.fetchone() is None:
