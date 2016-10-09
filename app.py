@@ -30,20 +30,11 @@ def main():
     command = request.form['command']
     text = request.form['text']
     
+    print teamid
     cursor = app.mysql.connection.cursor()
+    cursor.execute("INSERT INTO team (team_id) VALUES (0)".format(teamid))
     cursor.close()
-    return type(teamid)
-
-def load():
-    cursor = app.mysql.connection.cursor()
-    cursor.execute("SELECT * FROM hi")
-    
-    data = cursor.fetchall()
-    str = data[0]
-    cursor.close()
-
-    return 'works!'
-
+    return 'hi'
 
 if __name__ == '__main__':
     port = os.environ.get('PORT', 5000)
