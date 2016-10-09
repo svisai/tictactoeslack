@@ -21,7 +21,7 @@ def main():
         return 'not slack!'
     values = {}
     team_domain = request.form['team_domain']
-    return team_id
+    return team_domain
     '''
     values[team_domain] = request.form['team_domain']
     values[channel_id] = request.form['channel_id']
