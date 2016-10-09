@@ -21,18 +21,38 @@ def main():
         return 'Forbidden'
     
     values = {}
-    teamid = request.form['team_id']
+    teamkey = request.form['team_id']
     team_domain = request.form['team_domain']
-    channel_id = request.form['channel_id']
+    channelkey = request.form['channel_id']
     channel_name = request.form['channel_name']
-    user_id = request.form['user_id']
+    userkey = request.form['user_id']
     user_name = request.form['user_name']
     command = request.form['command']
     text = request.form['text']
     
-    print teamid
     cursor = app.mysql.connection.cursor()
-    cursor.execute("INSERT INTO team (team_key) VALUES (0)".format(teamid))
+    
+    exist = cursor.execute("SELECT EXISTS(SELECT * FROM team WHERE team_key = (0)".format(teamkey))
+    if exist == 0:
+        cursor.execute("INSERT INTO team (team_key, team_domain) VALUES ({0}, {1})".format(teamkey, team_domain))
+
+    teamid = cursor.execute("SELECT team_id FROM team WHERE team_key = (0)".format(teamkey))
+
+    exist = cursor.execute("SELECT EXISTS(SELECT * FROM channel WHERE channel_key = (0)".format(channelkey))
+    if exist == 0:
+        cursor.execute("INSERT INTO channel (channel_key, team_id, channel_name) VALUES ({0}, {1}, {2})".format(channelkey, teamid, channel_name))
+
+    exist = cursor.execute("SELECT EXISTS(SELECT * FROM player WHERE player_key = (0)".format(userkey))
+    if exist == 0:
+        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ({0}, {1}, {2}, {3}, {4})".format(userkey, 0, 0, 0, teamid, user_name))
+    
+    channelid = cursor.execute("SELECT channel_id FROM channel WHERE team_id = (0) AND channel_key = (1)".format(teamid, channelkey))
+    startplayer = cursor.execute("SELECT player_id FROM player WHERE team_id = (0) AND player_KEY = (1)".format(teamid, userkey))
+
+    exist = cursor.execute("SELECT EXISTS(SELECT * FROM game WHERE channel_id = (0) AND start_player = (1)".format(channelid, startplayer))
+    if exist == 0:
+        cursor.execute("INSERT INTO game (channel_id, start_time, end_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})".format(channelid, NULL, startplayer, 3, '000000000',5, 120, 0, 2, 0))
+
     cursor.close()
     return 'hi'
 

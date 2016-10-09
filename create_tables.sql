@@ -1,48 +1,58 @@
 drop table if exists team;
 create table team (
-    team_id VARCHAR(6) NOT NULL,
+    team_id INTEGER NOT NULL AUTO_INCREMENT,
     PRIMARY KEY(team_id)
+    team_key VARCHAR(20) NOT NULL,
+    team_domain VARCHAR(50)
 );
 
 drop table if exists channel;
 create table channel (
-channel_id VARCHAR(20) NOT NULL,
-PRIMARY KEY(channel_id),
-team_id VARCHAR(6),
-FOREIGN KEY (team_id)
-REFERENCES team(team_id)
-ON DELETE CASCADE
+    channel_id INTEGER NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY(channel_id),
+    channel_key VARCHAR(20) NOT NULL,
+    channel_name VARCHAR(20),
+    team_id INTEGER,
+    FOREIGN KEY (team_id)
+        REFERENCES team(team_id)
+        ON DELETE CASCADE
 );
 
 drop table if exists player;
 create table player (
-    player_id VARCHAR(20),
+    player_id INTEGER NOT NULL AUTO_INCREMENT,
     PRIMARY KEY(player_id),
-    total_wins INT,
-    total_losses INT,
-    total_ties INT
+    player_key VARCHAR(20),
+    total_wins INTEGER,
+    total_losses INTEGER,
+    total_ties INTEGER
+    team_id INTEGER,
+    player_name VARCHAR(20),
+    FOREIGN KEY (team_id)
+    REFERENCES team(team_id)
+        ON DELETE CASCADE,
 );
 
 
 drop table if exists game;
 create table game (
-game_id INTEGER NOT NULL AUTO_INCREMENT,
-PRIMARY KEY(game_id),
-channel_id VARCHAR(20),
-FOREIGN KEY (channel_id)
-REFERENCES channel(channel_id)
-ON DELETE CASCADE,
-start_time DATETIME,
-end_time DATETIME,
-start_player VARCHAR(20),
-FOREIGN KEY (start_player)
-REFERENCES player(player_id)
-ON DELETE CASCADE,
-board_size INT,
-game_board varchar(9),
-time_limit_move INT,
-time_limit_game INT,
-result_id VARCHAR(20),
-max_players INT,
-total_number_moves INT
+    game_id INTEGER NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY(game_id),
+    channel_id INTEGER,
+    FOREIGN KEY (channel_id)
+        REFERENCES channel(channel_id)
+        ON DELETE CASCADE,
+    start_time DATETIME,
+    end_time DATETIME,
+    start_player INTEGER,
+    FOREIGN KEY (start_player)
+        REFERENCES player(player_id)
+        ON DELETE CASCADE,
+    board_size INT,
+    game_board varchar(9),
+    time_limit_move INT,
+    time_limit_game INT,
+    result_id VARCHAR(20),
+    max_players INT,
+    total_number_moves INT
 );
