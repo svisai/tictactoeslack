@@ -171,7 +171,7 @@ def forfeit(channelkey, teamkey):
     playerid = cursor.fetchall()
     valid = 0
     for res in playerid:
-        cursor.execute("SELECT player_id FROM player WHERE player_name = {0}".format(request.form['user_name']))
+        cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(request.form['user_name']))
         p = cursor.fetchone()
         if p == res:
             valid = 1
