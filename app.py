@@ -14,7 +14,9 @@ app.config['MYSQL_HOST'] = 'us-cdbr-iron-east-04.cleardb.net'
 
 app.mysql.init_app(app)
 
-
+@app.route('/', methods=['GET'])
+def test():
+    print "@{0} and @{1} are currently playing a game. Please try again once their game is over!".format('sam', 'ziyu')
 @app.route('/ttt', methods=['POST'])
 def main():
     if(request.form['token'] != 'O8s7mBAq8Q3HvFj9lghw6RVI'):
@@ -29,7 +31,8 @@ def main():
     user_name = request.form['user_name']
     command = request.form['command']
     text = request.form['text']
-    
+    user_name = request.form['text']
+    print user_name
     cursor = app.mysql.connection.cursor()
 
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
@@ -60,9 +63,11 @@ def main():
     if cursor.fetchone() is None:
         cursor.execute("INSERT INTO game (channel_id, start_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})".format(channelid[0], startplayer[0], 3, '000000000',5, 120, 0, 2, 0))
         app.mysql.connection.commit()
-
+    else:
+        return "@{0} and @{1} are currently playing a game. Please try again once their game is over!".format(user_name, user2_name)
+        cursor.close()
     cursor.close()
-    return 'hi'
+    return "{0} started a game of tic tac toe! Play your first move.".format(startplayer[0])
 
 if __name__ == '__main__':
     port = os.environ.get('PORT', 5000)
