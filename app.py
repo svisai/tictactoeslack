@@ -164,20 +164,21 @@ def forfeit(channelkey, teamkey):
     
     cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
-    if gameid is not None:
-        cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
-    else:
+    if gameid is None:
         return help()
+    
     cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid[0]))
     playerid = cursor.fetchall()
     valid = 0
     for res in playerid:
-        cursor.execute("SELECT * FROM player WHERE player_id = {0} AND player_name = {1}".format(res, form.request['user_name']))
+        cursor.execute("SELECT player_id FROM player WHERE player_name = {0}".format(form.request['user_name']))
         p = cursor.fetchone()
-        if p is not None:
+        if p == res:
             valid = 1
     if valid == 0:
         return 'Must be in a current game to forfeit'
+
+    cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
     data = {
         "response_type": "in_channel",
         "text": "<@{0}> has ended their tic tac toe game".format(form.request['user_name'])
