@@ -48,17 +48,17 @@ def main():
 
     cursor.execute("SELECT * FROM player WHERE player_key = '{0}'".format(userkey))
     if cursor.fetchone() is None:
-        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, '{3}', '{4}')".format(userkey, 0, 0, 0, teamid, user_name))
+        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, '{4}')".format(userkey, 0, 0, 0, teamid[0], user_name))
         app.mysql.connection.commit()
     
-    cursor.execute("SELECT channel_id FROM channel WHERE team_id = '{0}' AND channel_key = '{1}'".format(teamid, channelkey))
+    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
     channelid = cursor.fetchone()
-    cursor.execute("SELECT player_id FROM player WHERE team_id = '{0}' AND player_KEY = '{1}'".format(teamid, userkey))
+    cursor.execute("SELECT player_id FROM player WHERE team_id = {0} AND player_KEY = '{1}'".format(teamid[0], userkey))
     startplayer = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM game WHERE channel_id = '{0}' AND start_player = '{1}'".format(channelid, startplayer))
+    cursor.execute("SELECT * FROM game WHERE channel_id = {0} AND start_player = {1}".format(channelid[0], startplayer[0]))
     if cursor.fetchone() is None:
-        cursor.execute("INSERT INTO game (channel_id, start_time, end_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ('{0}', NOW(), '{2}', '{3}', {4}, '{5}', {6}, {7}, {8}, {9})".format(channelid, NULL, startplayer, 3, '000000000',5, 120, 0, 2, 0))
+        cursor.execute("INSERT INTO game (channel_id, start_time, end_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {2}, {3}, {4}, '{5}', {6}, {7}, {8}, {9})".format(channelid[0], NULL, startplayer[0], 3, '000000000',5, 120, 0, 2, 0))
         app.mysql.connection.commit()
 
     cursor.close()
