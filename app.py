@@ -49,7 +49,7 @@ def move(teamkey, channelkey, userkey, position):
     channelid = cursor.fetchone()
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
-    cursor.execute("SELECT player_id FROM player WHERE channel_id = {0} AND player_key = '{1}'".format(channelid[0], userkey))
+    cursor.execute("SELECT player_id FROM player WHERE team_id = {0} AND player_key = '{1}'".format(teamid[0], userkey))
     playerid = cursor.fetchone()
     cursor.execute("SELECT player_id FROM currentplayer WHERE player_id = {0}".format(playerid[0]))
     currplayer = cursor.fetchone()
