@@ -69,4 +69,5 @@ create table currentplayer (
     FOREIGN KEY (game_id)
     REFERENCES game(game_id)
     ON DELETE CASCADE,
+    entry_type INTEGER
 );

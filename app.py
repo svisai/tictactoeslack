@@ -17,7 +17,7 @@ app.mysql.init_app(app)
 @app.route('/ttt', methods=['POST'])
 def main():
     if(request.form['token'] != 'O8s7mBAq8Q3HvFj9lghw6RVI'):
-        return 'Forbidden'
+        return '403 Forbidden'
     
     values = {}
     teamkey = request.form['team_id']
@@ -33,11 +33,54 @@ def main():
     func = info[0]
     if func == 'start':
         return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, info)
+    elif func == 'move':
+        return move(teamkey, channelkey, userkey)
     elif func == 'help':
-        return '/ttt start @user starts a game\n /ttt move [position from 0 to 8] to make a move \n /ttt forfeit to end game \n /ttt status to display board'
+        return 'To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status'
     else:
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 
+def move(teamkey, channelkey, userkey, position):
+    #Verify existing game including requesting player
+    cursor = app.mysql.connection.cursor()
+    cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    teamid = cursor.fetchone()
+    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
+    channelid = cursor.fetchone()
+    cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
+    gameid = cursor.fetchone()
+    cursor.execute("SELECT player_id FROM player WHERE channel_id = {0} AND player_key = '{1}'".format(channelid[0], userkey))
+    playerid = cursor.fetchone()
+    cursor.execute("SELECT player_id FROM currentplayer WHERE player_id = {0}".format(playerid[0]))
+    currplayer = cursor.fetchone()
+    if gameid is None or currplayer is None:
+        return 'Join a game to play'
+
+    cursor.execute("SELECT total_number_moves FROM game WHERE game_id = {0}".format(gameid[0]))
+    res = cursor.fetchone()
+    num_moves = res[0]
+    cursor.execute("SELECT entry_type FROM currentplayer WHERE player_id = {0}".format(playerid[0]))
+    res = cursor.fetchone()
+    playertype = res[0]
+    cursor.execute("SELECT game_board FROM game WHERE game_id = {0}".format(gameid[0]))
+    res = cursor.fetchone()
+    board = res[0]
+
+    if board[position] != '0':
+        return 'The position you requested is occupied'
+    if (num_moves % 2 == 0 and playertype != 2) or (num_moves % 2 == 1 and playertype != 1):
+        return 'Please wait your turn'
+
+    if(num_moves % 2):
+        board[position] = 'O'
+    else:
+        board[position] = 'X'
+
+    cursor.execute("UPDATE game SET total_number_moves=total_number_moves+1 WHERE game_id={0}".format(gameid[0]))
+    app.mysql.connection.commit()
+    cursor.close()
+    return 'move success'
+                   
 def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text):
     user2_name = text[1]
     user2_name = user2_name[1:]
@@ -73,12 +116,12 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
 
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
-    secondplayer = cursor.fetchone()
-    cursor.execute("INSERT INTO currentplayer (player_id, game_id) VALUES ({0}, {1})".format(startplayer[0], gameid[0]))
+
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {3})".format(startplayer[0], gameid[0], 1))
 
     cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(user2_name))
     secondplayer = cursor.fetchone()
-    cursor.execute("INSERT INTO currentplayer (player_id, game_id) VALUES ({0}, {1})".format(secondplayer[0], gameid[0]))
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {3})".format(secondplayer[0], gameid[0], 2))
 
 
     app.mysql.connection.commit()
