@@ -14,9 +14,6 @@ app.config['MYSQL_HOST'] = 'us-cdbr-iron-east-04.cleardb.net'
 
 app.mysql.init_app(app)
 
-@app.route('/', methods=['GET'])
-def test():
-    print "@{0} and @{1} are currently playing a game. Please try again once their game is over!".format('sam', 'ziyu')
 @app.route('/ttt', methods=['POST'])
 def main():
     if(request.form['token'] != 'O8s7mBAq8Q3HvFj9lghw6RVI'):
@@ -31,8 +28,8 @@ def main():
     user_name = request.form['user_name']
     command = request.form['command']
     text = request.form['text']
-    user_name = request.form['text']
-    print user_name
+    user2_name = request.form['text']
+    print user2_name
     cursor = app.mysql.connection.cursor()
 
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
