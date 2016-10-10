@@ -36,13 +36,14 @@ def main():
     elif func == 'status':
         printboard(teamkey, channelkey)
     elif func == 'move':
-        return move(teamkey, channelkey, userkey, info[1], user2_name)
+        return move(teamkey, channelkey, userkey, info[1])
     elif func == 'help':
         return 'To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status'
     else:
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 
-def move(teamkey, channelkey, userkey, position, user2_name):
+def move(teamkey, channelkey, userkey, position):
+    user2_name = request.form['user_name']
     position = int(position)
     if position > 8:
         return 'Position out of bounds'
