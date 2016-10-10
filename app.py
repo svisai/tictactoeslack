@@ -34,7 +34,7 @@ def main():
     if func == 'start':
         return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, info)
     elif func == 'move':
-        return move(teamkey, channelkey, userkey)
+        return move(teamkey, channelkey, userkey, info[1])
     elif func == 'help':
         return 'To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status'
     else:
