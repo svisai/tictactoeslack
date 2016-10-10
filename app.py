@@ -34,7 +34,7 @@ def main():
     if func == 'start':
         return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, info)
     elif func == 'status':
-        printboard(teamkey, channelkey)
+        return printboard(teamkey, channelkey)
     elif func == 'move':
         return move(teamkey, channelkey, userkey, info[1])
     elif func == 'help':
@@ -43,6 +43,7 @@ def main():
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 
 def move(teamkey, channelkey, userkey, position):
+    cursor = app.mysql.connection.cursor()
     user2_name = request.form['user_name']
     position = int(position)
     if position > 8:
@@ -55,7 +56,6 @@ def move(teamkey, channelkey, userkey, position):
         return 'Join a game to play'
 
     #Verify existing game including requesting player
-    cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     teamid = cursor.fetchone()
     cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
@@ -110,7 +110,7 @@ def printboard(teamkey, channelkey):
     b = res[0]
     app.mysql.connection.commit()
     cursor.close()
-    
+    b = list(b)
     res = ""
     res += '|'
     for i in range(0,3):
