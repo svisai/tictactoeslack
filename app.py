@@ -44,7 +44,7 @@ def main():
             return help()
         return move(teamkey, channelkey, userkey, info[1])
     elif func == 'forfeit':
-        return forfeit(channelkey, teamkey)
+        return forfeit(channelkey, teamkey, user_name)
     elif func == 'help':
         return help()
     else:
@@ -65,15 +65,11 @@ def help():
 
 def move(teamkey, channelkey, userkey, position):
     cursor = app.mysql.connection.cursor()
-    user2_name = request.form['user_name']
-    if cursor.fetchone() is not None:
-        cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(request.form['user_id'], user2_name))
-    else:
-        return 'Join a game to play'
-    position = int(position)
-    if position > 8:
-        return 'Position out of bounds'
-    cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
+   
+    cursor.execute("SELECT player_key FROM player WHERE player_name = '{0}'".format(user2_name))
+    if cursor.fetchone() is None:
+        user2_name = request.form['user_name']
+        cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(userkey, user2_name))
 
     #Verify existing game including requesting player
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
@@ -88,6 +84,10 @@ def move(teamkey, channelkey, userkey, position):
     currplayer = cursor.fetchone()
     if gameid is None or currplayer is None:
         return 'Join a game to play'
+
+    position = int(position)
+    if position > 8:
+        return 'Position out of bounds'
 
     cursor.execute("SELECT total_number_moves FROM game WHERE game_id = {0}".format(gameid[0]))
     res = cursor.fetchone()
@@ -106,9 +106,9 @@ def move(teamkey, channelkey, userkey, position):
 
     board = list(board)
     if(num_moves % 2):
-        board[position] = 'X'
-    else:
         board[position] = 'O'
+    else:
+        board[position] = 'X'
 
     s = "".join(board)
     cursor.execute("UPDATE game SET total_number_moves=total_number_moves+1 WHERE game_id={0}".format(gameid[0]))
@@ -155,7 +155,7 @@ def printboard(teamkey, channelkey):
     res += '\n'
     return res
 
-def forfeit(channelkey, teamkey):
+def forfeit(channelkey, teamkey, username):
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     teamid = cursor.fetchone()
@@ -165,13 +165,13 @@ def forfeit(channelkey, teamkey):
     cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
     if gameid is None:
-        return help()
+        return 'No current game to forfeit'
     
     cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid[0]))
     playerid = cursor.fetchall()
     valid = 0
     for res in playerid:
-        cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(request.form['user_name']))
+        cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(username))
         p = cursor.fetchone()
         if p == res:
             valid = 1
@@ -181,7 +181,7 @@ def forfeit(channelkey, teamkey):
     cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
     data = {
         "response_type": "in_channel",
-        "text": "<@{0}> has ended their tic tac toe game".format(request.form['user_name'])
+        "text": "<@{0}> has ended their tic tac toe game".format(username)
     }
     resp = Response(json.dumps(data),  mimetype='application/json')
     app.mysql.connection.commit()
