@@ -1,4 +1,4 @@
-from flask import Flask, render_template, json, request
+from flask import Flask, Response, render_template, json, request
 from flask_mysqldb import MySQL
 import os
 
@@ -57,7 +57,6 @@ def help():
     #}
     
     data = {
-                "Content-type": "application/json",
                 "response_type": "ephemeral",
                 "text": "How to use /ttt",
 
@@ -67,7 +66,7 @@ def help():
                     }
                 ]
             }
-    js = json.dumps(data)
+    js = Response(json.dumps(data),  mimetype='application/json')
     return js
 
 def move(teamkey, channelkey, userkey, position):
