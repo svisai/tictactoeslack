@@ -14,12 +14,11 @@ app.config['MYSQL_HOST'] = os.environ.get('mysqlhost')
 
 app.mysql.init_app(app)
 
-@app.route('/ttt', methods=['POST', 'GET'])
+@app.route('/ttt', methods=['POST'])
 def main():
     #temp token will auth later
     #if(request.form['token'] != 'y' or request.form['token'] != 'x'):
     #   return '403 Forbidden'
-    help()
     values = {}
     teamkey = request.form['team_id']
     team_domain = request.form['team_domain']
@@ -49,13 +48,6 @@ def main():
     else:
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 def help():
-    #data = {
-    #    "Content-type": "application/json",
-    #    "response_type": "ephemeral",
-    #    "text": "How to use /ttt",
-    #    "attachments":[{"text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"}]
-    #}
-    
     data = {
                 "response_type": "ephemeral",
                 "text": "How to use /ttt",
@@ -66,8 +58,8 @@ def help():
                     }
                 ]
             }
-    js = Response(json.dumps(data),  mimetype='application/json')
-    return js
+    resp = Response(json.dumps(data),  mimetype='application/json')
+    return resp
 
 def move(teamkey, channelkey, userkey, position):
     cursor = app.mysql.connection.cursor()
@@ -199,10 +191,13 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
 
     app.mysql.connection.commit()
     cursor.close()
-    return{
+    data = {
         "response_type": "in_channel",
         "text":"@{0} has started a game of tic tac toe with @{1}! Play your first move, <@{2}>.".format(user_name, user2_name, user_name)
     }
+
+    resp = Response(json.dumps(data),  mimetype='application/json')
+    return resp
 
 if __name__ == '__main__':
     port = os.environ.get('PORT', 5000)
