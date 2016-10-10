@@ -168,7 +168,7 @@ def forfeit(channelkey, teamkey):
         cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
     else:
         return help()
-    cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid))
+    cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid[0]))
     playerid = cursor.fetchall()
     valid = 0
     for res in playerid:
