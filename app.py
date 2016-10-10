@@ -31,17 +31,17 @@ def main():
     text = request.form['text']
     
     info = text.split()
-    if len(info < 1):
+    if len(info) < 1:
         return help()
     func = info[0]
     if func == 'start':
-        if(len(info) < 2):
+        if len(info) < 2:
             return help()
         return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, info)
     elif func == 'status':
         return printboard(teamkey, channelkey)
     elif func == 'move':
-        if(len(info) < 2):
+        if len(info) < 2:
             return help()
         return move(teamkey, channelkey, userkey, info[1])
     elif func == 'help':
