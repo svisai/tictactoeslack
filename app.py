@@ -81,8 +81,7 @@ def move(teamkey, channelkey, userkey, position):
     cursor.execute("UPDATE game SET total_number_moves=total_number_moves+1 WHERE game_id={0}".format(gameid[0]))
     app.mysql.connection.commit()
     cursor.close()
-    printboard(board)
-    return 'move success'
+    return printboard(board)
 
 def printboard(b):
     res = ""
