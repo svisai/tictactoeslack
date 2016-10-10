@@ -14,12 +14,12 @@ app.config['MYSQL_HOST'] = os.environ.get('mysqlhost')
 
 app.mysql.init_app(app)
 
-@app.route('/ttt', methods=['POST'])
+@app.route('/ttt', methods=['POST', 'GET'])
 def main():
     #temp token will auth later
     #if(request.form['token'] != 'y' or request.form['token'] != 'x'):
     #   return '403 Forbidden'
-    
+    help()
     values = {}
     teamkey = request.form['team_id']
     team_domain = request.form['team_domain']
@@ -49,17 +49,24 @@ def main():
     else:
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 def help():
-    return
-    {
-            "Content-type": "application/json",
-            "response_type": "ephemeral",
-            "text": "How to use /ttt",
-            "attachments":[
-                {
-                 "text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
-                }
-            ]
-    }
+    #data = {
+    #    "Content-type": "application/json",
+    #    "response_type": "ephemeral",
+    #    "text": "How to use /ttt",
+    #    "attachments":[{"text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"}]
+    #}
+    
+    data = {
+                "text": "It's 80 degrees right now.",
+                "attachments": [
+                    {
+                        "text":"Partly cloudy today and tomorrow"
+                    }
+                ]
+            }
+    js = json.dumps(data)
+    resp = Response(js, status=200, mimetype='application/json')
+    return js
 
 def move(teamkey, channelkey, userkey, position):
     cursor = app.mysql.connection.cursor()
