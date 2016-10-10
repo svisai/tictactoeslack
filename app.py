@@ -69,19 +69,37 @@ def move(teamkey, channelkey, userkey, position):
     position = int(position)
     if board[position] != '0':
         return 'The position you requested is occupied'
-    if (num_moves % 2 == 0 and playertype != 2) or (num_moves % 2 == 1 and playertype != 1):
+    if (num_moves % 2 == 0 and playertype != 1) or (num_moves % 2 == 1 and playertype != 2):
         return 'Please wait your turn'
 
     if(num_moves % 2):
-        board[position] = 'O'
-    else:
         board[position] = 'X'
+    else:
+        board[position] = 'O'
 
     cursor.execute("UPDATE game SET total_number_moves=total_number_moves+1 WHERE game_id={0}".format(gameid[0]))
     app.mysql.connection.commit()
     cursor.close()
+    printboard(board)
     return 'move success'
-                   
+
+def printboard(board):
+    b = list(board)
+    res = ""
+    res += '-------------'
+    for i in range(0,3):
+        res += b[i] + '|' + " "
+    res += '\n'
+    res +=  '-------------'
+    for i in range(3,6):
+        res +=  b[i] + '|' + " "
+    res +=  '\n'
+    res +=  '-------------'
+    for i in range(6,9):
+        res +=  b[i] + '|' + " "
+    res +=  '\n'
+    res +=  '-------------'
+    return res
 def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text):
     user2_name = text[1]
     user2_name = user2_name[1:]
