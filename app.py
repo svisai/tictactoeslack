@@ -58,7 +58,7 @@ def main():
 
     cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
     if cursor.fetchone() is not None:
-        cursor.execute("DELETE * FROM game WHERE channel_id = {0}".format(channelid[0]))
+        cursor.execute("DELETE * FROM game WHERE channel_id = '{0}'".format(channelid[0]))
     cursor.execute("INSERT INTO game (channel_id, start_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})".format(channelid[0], startplayer[0], 3, '000000000',5, 120, 0, 2, 0))
     app.mysql.connection.commit()
 
