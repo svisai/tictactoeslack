@@ -48,7 +48,7 @@ def main():
 
     cursor.execute("SELECT * FROM player WHERE player_key = '{0}'".format(userkey))
     if cursor.fetchone() is None:
-        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, '{4}')".format(userkey, 0, 0, 0, teamid[0], user_name))
+        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, {4}, '{5}')".format(userkey, 0, 0, 0, teamid[0], user_name))
         app.mysql.connection.commit()
     
     cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
