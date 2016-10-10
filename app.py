@@ -57,10 +57,13 @@ def help():
     #}
     
     data = {
-                "text": "It's 80 degrees right now.",
-                "attachments": [
+                "Content-type": "application/json",
+                "response_type": "ephemeral",
+                "text": "How to use /ttt",
+
+                "attachments":[
                     {
-                        "text":"Partly cloudy today and tomorrow"
+                        "text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
                     }
                 ]
             }
