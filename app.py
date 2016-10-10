@@ -65,7 +65,6 @@ def help():
                 ]
             }
     js = json.dumps(data)
-    resp = Response(js, status=200, mimetype='application/json')
     return js
 
 def move(teamkey, channelkey, userkey, position):
