@@ -32,7 +32,7 @@ def main():
     info = text.split()
     func = info[0]
     if func == 'start':
-        return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text)
+        return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, info)
     elif func == 'help':
         return '/ttt start @user starts a game\n /ttt move [position from 0 to 8] to make a move \n /ttt forfeit to end game \n /ttt status to display board'
     else:
