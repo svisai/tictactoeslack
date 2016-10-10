@@ -147,7 +147,7 @@ def move(teamkey, channelkey, userkey, position):
     if(num_moves % 2 == 0):
         row = "row" + str(row)
         print(row)
-        cursor.execute("UPDATE game SET {0}={1}+1 WHERE game_id={2}".format(row, row, gameid))
+        cursor.execute("UPDATE game SET '{0}'='{1}'+1 WHERE game_id={2}".format(row, row, gameid))
         cursor.execute("UPDATE game SET column{0}=column{1}+1 WHERE game_id={2}".format(column, column, gameid))
     else:
         cursor.execute("UPDATE game SET row{0}=row{1}-1 WHERE game_id={2}".format(row, row, gameid))
