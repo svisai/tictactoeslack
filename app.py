@@ -72,6 +72,7 @@ def move(teamkey, channelkey, userkey, position):
     if (num_moves % 2 == 0 and playertype != 1) or (num_moves % 2 == 1 and playertype != 2):
         return 'Please wait your turn'
 
+    board = list(board)
     if(num_moves % 2):
         board[position] = 'X'
     else:
@@ -84,7 +85,6 @@ def move(teamkey, channelkey, userkey, position):
     return 'move success'
 
 def printboard(board):
-    b = list(board)
     res = ""
     res += '-------------'
     for i in range(0,3):
