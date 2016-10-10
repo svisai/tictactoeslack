@@ -84,7 +84,7 @@ def move(teamkey, channelkey, userkey, position):
     printboard(board)
     return 'move success'
 
-def printboard(board):
+def printboard(b):
     res = ""
     res += '-------------'
     for i in range(0,3):
