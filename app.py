@@ -158,7 +158,8 @@ def printboard(teamkey, channelkey):
 def forfeit(channelkey, teamkey):
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
-    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid, channelkey))
+    teamid = cursor.fetchone()
+    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
     channelid = cursor.fetchone()
     
     cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
