@@ -106,11 +106,67 @@ def move(teamkey, channelkey, userkey, position):
         return 'Please wait your turn'
 
     board = list(board)
-    if(num_moves % 2):
-        board[position] = 'O'
-    else:
+    if(num_moves % 2 == 0):
         board[position] = 'X'
+    else:
+        board[position] = 'O'
 
+    cursor.execute("SELECT board_size FROM game WHERE game_id = {0}".format(gameid[0]))
+    boardsize = cursor.fetchone()
+    boardsize = boardsize[0]
+
+    column = position % boardsize
+    row = position / boardsize
+
+    win = 0
+    if(column == row):
+        if(num_moves % 2 == 0):
+            cursor.execute("UPDATE game SET row0=row0+1 WHERE game_id={0}".format(gameid))
+        else:
+            cursor.execute("UPDATE game SET row0=row0-1 WHERE game_id={0}".format(gameid))
+        cursor.execute("SELECT diag0 FROM game WHERE game_id={1}".format(row, gameid))
+        res = cursor.fetchone()
+        if(num_moves % 2 == 0 and res[0] == board_size):
+            win = 1
+        elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+            win = 1
+
+
+    elif(column == boardsize - row - 1):
+        if(num_moves % 2 == 0):
+            cursor.execute("UPDATE game SET row1=row1+1 WHERE game_id={0}".format(gameid))
+        else:
+            cursor.execute("UPDATE game SET row1=row1-1 WHERE game_id={0}".format(gameid))
+        cursor.execute("SELECT diag1 FROM game WHERE game_id={1}".format(row, gameid))
+        res = cursor.fetchone()
+        if(num_moves % 2 == 0 and res[0] == board_size):
+            win = 1
+        elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+            win = 1
+
+    if(num_moves % 2 == 0):
+        cursor.execute("UPDATE game SET row'{0}'=row'{1}'+1 WHERE game_id={2}".format(row, row, gameid))
+        cursor.execute("UPDATE game SET column'{0}'=column'{1}'+1 WHERE game_id={2}".format(column, column, gameid))
+    else:
+        cursor.execute("UPDATE game SET row'{0}'=row'{1}'-1 WHERE game_id={2}".format(row, row, gameid))
+        cursor.execute("UPDATE game SET column'{0}'=column'{1}'-1 WHERE game_id={2}".format(column, column, gameid))
+
+    #check win
+    cursor.execute("SELECT row'{0}' FROM game WHERE game_id={1}".format(row, gameid))
+    res = cursor.fetchone()
+    if(num_moves % 2 == 0 and res[0] == board_size):
+        win = 1
+    elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+        win = 1
+    cursor.execute("SELECT column'{0}' FROM game WHERE game_id={1}".format(column, gameid))
+    res = cursor.fetchone()
+    if(num_moves % 2 == 0 and res[0] == board_size):
+        win = 1
+    elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+        win = 1
+        
+    if(win):
+        print 'winner'
     s = "".join(board)
     cursor.execute("UPDATE game SET total_number_moves=total_number_moves+1 WHERE game_id={0}".format(gameid[0]))
     cursor.execute("UPDATE game SET game_board='{0}' WHERE game_id={1}".format(s, gameid[0]))
@@ -155,6 +211,16 @@ def printboard(teamkey, channelkey):
     res += '-------------'
     res += '\n'
     return res
+
+def endgame(channelkey, teamkey):
+    cursor = app.mysql.connection.cursor()
+    cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
+    cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    teamid = cursor.fetchone()
+    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
+    channelid = cursor.fetchone()
+    cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
+    return 'Game ended'
 
 def forfeit(channelkey, teamkey, username):
     cursor = app.mysql.connection.cursor()

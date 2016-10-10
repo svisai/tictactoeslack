@@ -54,7 +54,15 @@ create table game (
     time_limit_game INT,
     result_id VARCHAR(20),
     max_players INT,
-    total_number_moves INT
+    total_number_moves INT,
+    column0 INTEGER,
+    column1 INTEGER,
+    column2 INTEGER,
+    row0 INTEGER,
+    row1 INTEGER,
+    row2 INTEGER,
+    diag0 INTEGER,
+    diag1 INTEGER
 );
 
 drop table if exists currentplayer;
