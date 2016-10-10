@@ -41,6 +41,7 @@ def main():
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 
 def move(teamkey, channelkey, userkey, position):
+    position = int(position)
     if position > 8:
         return 'Position out of bounds'
     #Verify existing game including requesting player
@@ -68,7 +69,6 @@ def move(teamkey, channelkey, userkey, position):
     res = cursor.fetchone()
     board = res[0]
 
-    position = int(position)
     if board[position] != '0':
         return 'The position you requested is occupied'
     if (num_moves % 2 == 0 and playertype != 1) or (num_moves % 2 == 1 and playertype != 2):
