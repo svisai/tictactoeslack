@@ -32,7 +32,6 @@ def main():
     user2_name = user2_name[1:]
     cursor = app.mysql.connection.cursor()
 
-    print text
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     if cursor.fetchone() is None:
         cursor.execute("INSERT INTO team (team_key, team_domain) VALUES ('{0}', '{1}')".format(teamkey, team_domain))
@@ -74,7 +73,7 @@ def main():
     secondplayer = cursor.fetchone()
     cursor.execute("INSERT INTO currentplayer (player_id, game_id) VALUES ({0}, {1})".format(startplayer[0], gameid[0]))
     app.mysql.connection.commit()
-    cursor.execute("SELECT player_id FROM player WHERE player_name = {0}".format(user2_name))
+    cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(user2_name))
     secondplayer = cursor.fetchone()
     cursor.execute("INSERT INTO currentplayer (player_id, game_id) VALUES ({0}, {1})".format(secondplayer[0], gameid[0]))
     app.mysql.connection.commit()
