@@ -33,6 +33,8 @@ def main():
     func = info[0]
     if func == 'start':
         return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, info)
+    elif func == 'status':
+        printboard(teamkey, channelkey)
     elif func == 'move':
         return move(teamkey, channelkey, userkey, info[1])
     elif func == 'help':
@@ -85,9 +87,22 @@ def move(teamkey, channelkey, userkey, position):
     cursor.execute("UPDATE game SET game_board='{0}' WHERE game_id={1}".format(s, gameid[0]))
     app.mysql.connection.commit()
     cursor.close()
-    return printboard(board)
+    return printboard(teamkey, channelkey)
 
-def printboard(b):
+def printboard(teamkey, channelkey):
+    cursor = app.mysql.connection.cursor()
+    cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    teamid = cursor.fetchone()
+    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
+    channelid = cursor.fetchone()
+    cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
+    gameid = cursor.fetchone()
+    cursor.execute("SELECT game_board FROM game WHERE game_id = {0}".format(gameid[0]))
+    res = cursor.fetchone()
+    b = res[0]
+    app.mysql.connection.commit()
+    cursor.close()
+    
     res = ""
     res += '|'
     for i in range(0,3):
@@ -102,6 +117,7 @@ def printboard(b):
         res +=  b[i] + '|' + " "
     res +=  '\n'
     return res
+
 def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text):
     user2_name = text[1]
     user2_name = user2_name[1:]
@@ -117,9 +133,10 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     if cursor.fetchone() is None:
         cursor.execute("INSERT INTO channel (channel_key, team_id, channel_name) VALUES ('{0}', {1}, '{2}')".format(channelkey, teamid[0], channel_name))
 
-    cursor.execute("SELECT * FROM player WHERE player_key = '{0}'".format(userkey))
+    cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user_name))
     if cursor.fetchone() is None:
         cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, {4}, '{5}')".format(userkey, 0, 0, 0, teamid[0], user_name))
+    cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(userkey, user_name))
 
     cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
     if cursor.fetchone() is None:
