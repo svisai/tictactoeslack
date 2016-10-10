@@ -7,16 +7,17 @@ app = Flask(__name__)
 
 # Configure the MySQL Server
 app.mysql = MySQL()
-app.config['MYSQL_USER'] = 'b52ea2241ff58f'
-app.config['MYSQL_PASSWORD'] = 'bb8d37ad'
-app.config['MYSQL_DB'] = 'heroku_a09bdcabd272d7a'
-app.config['MYSQL_HOST'] = 'us-cdbr-iron-east-04.cleardb.net'
+app.config['MYSQL_USER'] = os.environ['mysqluser']
+app.config['MYSQL_PASSWORD'] = os.environ['mysqlpassword']
+app.config['MYSQL_DB'] = os.environ['mysqldb']
+app.config['MYSQL_HOST'] = os.environ['mysqlhost']
 
 app.mysql.init_app(app)
 
 @app.route('/ttt', methods=['POST'])
 def main():
-    #if(request.form['token'] != 'O8s7mBAq8Q3HvFj9lghw6RVI' or request.form['token'] != 'osSz1E86vqGCOJRp8f9nh1cu'):
+    #temp token will auth later
+    #if(request.form['token'] != 'y' or request.form['token'] != 'x'):
     #   return '403 Forbidden'
     
     values = {}
@@ -32,15 +33,31 @@ def main():
     info = text.split()
     func = info[0]
     if func == 'start':
+        if(len(info) < 2):
+            return help()
         return startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, info)
     elif func == 'status':
         return printboard(teamkey, channelkey)
     elif func == 'move':
+        if(len(info) < 1):
+            return help()
         return move(teamkey, channelkey, userkey, info[1])
     elif func == 'help':
-        return 'To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status'
+        return help()
     else:
         return 'Invalid command for tic tac toe. Use /ttt help for info'
+def help():
+    return
+    {
+            "response_type": "ephemeral",
+            "text": "How to use /ttt",
+            "attachments":[
+                {
+                 "text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
+                }
+            ]
+        
+    }
 
 def move(teamkey, channelkey, userkey, position):
     cursor = app.mysql.connection.cursor()
@@ -172,7 +189,10 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
 
     app.mysql.connection.commit()
     cursor.close()
-    return "Hi @{0}! You've started a game of tic tac toe with @{1}! Play your first move.".format(user_name, user2_name)
+    return{
+        "response_type": "in_channel",
+        "text":"@{0} has started a game of tic tac toe with @{1}! Play your first move, <@{2}>.".format(user_name, user2_name, user_name)
+    }
 
 if __name__ == '__main__':
     port = os.environ.get('PORT', 5000)
