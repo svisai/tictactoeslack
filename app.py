@@ -171,7 +171,7 @@ def forfeit(channelkey, teamkey):
     playerid = cursor.fetchall()
     valid = 0
     for res in playerid:
-        cursor.execute("SELECT player_id FROM player WHERE player_name = {0}".format(form.request['user_name']))
+        cursor.execute("SELECT player_id FROM player WHERE player_name = {0}".format(request.form['user_name']))
         p = cursor.fetchone()
         if p == res:
             valid = 1
@@ -181,7 +181,7 @@ def forfeit(channelkey, teamkey):
     cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
     data = {
         "response_type": "in_channel",
-        "text": "<@{0}> has ended their tic tac toe game".format(form.request['user_name'])
+        "text": "<@{0}> has ended their tic tac toe game".format(request.form['user_name'])
     }
     resp = Response(json.dumps(data),  mimetype='application/json')
     app.mysql.connection.commit()
