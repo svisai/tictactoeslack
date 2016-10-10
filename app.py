@@ -41,6 +41,8 @@ def main():
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 
 def move(teamkey, channelkey, userkey, position):
+    if position > 8:
+        return 'Position out of bounds'
     #Verify existing game including requesting player
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
@@ -85,19 +87,18 @@ def move(teamkey, channelkey, userkey, position):
 
 def printboard(b):
     res = ""
-    res += '-------------'
+    res += '|'
     for i in range(0,3):
         res += b[i] + '|' + " "
     res += '\n'
-    res +=  '-------------'
+    res +=  '|'
     for i in range(3,6):
         res +=  b[i] + '|' + " "
     res +=  '\n'
-    res +=  '-------------'
+    res +=  '|'
     for i in range(6,9):
         res +=  b[i] + '|' + " "
     res +=  '\n'
-    res +=  '-------------'
     return res
 def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text):
     user2_name = text[1]
