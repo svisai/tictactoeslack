@@ -28,7 +28,7 @@ def main():
     user_name = request.form['user_name']
     command = request.form['command']
     text = request.form['text']
-
+    
     info = text.split()
     func = info[0]
     if func == 'start':
@@ -36,16 +36,23 @@ def main():
     elif func == 'status':
         printboard(teamkey, channelkey)
     elif func == 'move':
-        return move(teamkey, channelkey, userkey, info[1])
+        return move(teamkey, channelkey, userkey, info[1], user2_name)
     elif func == 'help':
         return 'To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status'
     else:
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 
-def move(teamkey, channelkey, userkey, position):
+def move(teamkey, channelkey, userkey, position, user2_name, user2_key):
     position = int(position)
     if position > 8:
         return 'Position out of bounds'
+    cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
+
+    if cursor.fetchone() is not None:
+        cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name={1}".format(s, request.form['user_id']))
+    else:
+        return 'Join a game to play'
+
     #Verify existing game including requesting player
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
