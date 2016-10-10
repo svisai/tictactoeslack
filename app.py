@@ -51,7 +51,7 @@ def move(teamkey, channelkey, userkey, position):
     cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
 
     if cursor.fetchone() is not None:
-        cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name={1}".format(s, request.form['user_id']))
+        cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(request.form['user_id'], user2_name))
     else:
         return 'Join a game to play'
 
