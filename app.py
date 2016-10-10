@@ -43,6 +43,8 @@ def main():
         if len(info) < 2:
             return help()
         return move(teamkey, channelkey, userkey, info[1])
+    elif func == 'forfeit':
+        return forfeit(channelkey, teamkey)
     elif func == 'help':
         return help()
     else:
