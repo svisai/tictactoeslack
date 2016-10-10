@@ -66,6 +66,7 @@ def move(teamkey, channelkey, userkey, position):
     res = cursor.fetchone()
     board = res[0]
 
+    position = int(position)
     if board[position] != '0':
         return 'The position you requested is occupied'
     if (num_moves % 2 == 0 and playertype != 2) or (num_moves % 2 == 1 and playertype != 1):
