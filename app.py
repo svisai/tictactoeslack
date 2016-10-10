@@ -65,10 +65,9 @@ def help():
 
 def move(teamkey, channelkey, userkey, position):
     cursor = app.mysql.connection.cursor()
-   
-    cursor.execute("SELECT player_key FROM player WHERE player_name = '{0}'".format(user2_name))
+    user2_name = request.form['user_name']
+    cursor.execute("SELECT player_key FROM player WHERE player_name = '{0}' AND team_key = '{1}'".format(user2_name, teamkey))
     if cursor.fetchone() is None:
-        user2_name = request.form['user_name']
         cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(userkey, user2_name))
 
     #Verify existing game including requesting player
