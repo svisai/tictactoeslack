@@ -28,14 +28,19 @@ def main():
     user_name = request.form['user_name']
     command = request.form['command']
     text = request.form['text']
-    user2_name = request.form['text']
+
+    info = text.split()
+    func = info[0]
+    if func == 'start':
+        startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text, user2_name)
+    elif func == 'help':
+        return '/ttt start @user starts a game\n /ttt move [position from 0 to 8] to make a move \n /ttt forfeit to end game \n /ttt status to display board'
+    else:
+        return 'Invalid command for tic tac toe. Use /ttt help for info'
+
+def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text):
+    user2_name = text[1]
     user2_name = user2_name[1:]
-
-    for string in text:
-        print string
-    return 'hi'
-
-def startgame():
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     if cursor.fetchone() is None:
