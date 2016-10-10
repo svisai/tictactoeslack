@@ -56,3 +56,17 @@ create table game (
     max_players INT,
     total_number_moves INT
 );
+
+drop table if exists currentplayer;
+create table currentplayer (
+    currentplayer_id INTEGER NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY(currentplayer_id),
+    player_id  INTEGER,
+    FOREIGN KEY (player_id)
+        REFERENCES player(player_id)
+        ON DELETE CASCADE,
+    game_id INTEGER,
+    FOREIGN KEY (game_id)
+    REFERENCES game(game_id)
+    ON DELETE CASCADE,
+);

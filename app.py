@@ -32,6 +32,7 @@ def main():
     user2_name = user2_name[1:]
     cursor = app.mysql.connection.cursor()
 
+    print text
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     if cursor.fetchone() is None:
         cursor.execute("INSERT INTO team (team_key, team_domain) VALUES ('{0}', '{1}')".format(teamkey, team_domain))
@@ -50,10 +51,16 @@ def main():
     if cursor.fetchone() is None:
         cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, {4}, '{5}')".format(userkey, 0, 0, 0, teamid[0], user_name))
         app.mysql.connection.commit()
-    
+
+    cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
+    if cursor.fetchone() is None:
+        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, {4}, '{5}')".format("", 0, 0, 0, teamid[0], user2_name))
+        app.mysql.connection.commit()
+
+
     cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
     channelid = cursor.fetchone()
-    cursor.execute("SELECT player_id FROM player WHERE team_id = {0} AND player_KEY = '{1}'".format(teamid[0], userkey))
+    cursor.execute("SELECT player_id FROM player WHERE team_id = {0} AND player_key = '{1}'".format(teamid[0], userkey))
     startplayer = cursor.fetchone()
 
     cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
@@ -62,8 +69,16 @@ def main():
     cursor.execute("INSERT INTO game (channel_id, start_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})".format(channelid[0], startplayer[0], 3, '000000000',5, 120, 0, 2, 0))
     app.mysql.connection.commit()
 
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id".format(startplayer[0], game_id))
+    app.mysql.connection.commit()
+    cursor.execute("SELECT player_id FROM player WHERE player_name = {0}".format(user2_name))
+    secondplayer = cursor.fetchone()
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id".format(secondplayer[0], game_id))
+    app.mysql.connection.commit()
+
+
     cursor.close()
-    return "{0} started a game of tic tac toe! Play your first move.".format(startplayer[0])
+    return "Hi @{0}! You've started a game of tic tac toe with @{1}! Play your first move.".format(user_name, user2_name)
 
 if __name__ == '__main__':
     port = os.environ.get('PORT', 5000)
