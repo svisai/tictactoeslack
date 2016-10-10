@@ -49,17 +49,17 @@ def main():
     else:
         return 'Invalid command for tic tac toe. Use /ttt help for info'
 def help():
-    return
-    {
-            "response_type": "ephemeral",
-            "text": "How to use /ttt",
-            "attachments":[
-                {
-                 "text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
-                }
-            ]
-        
-    }
+    return "test"
+        #{
+        #   "response_type": "ephemeral",
+        #   "text": "How to use /ttt",
+        #   "attachments":[
+        #       {
+        #        "text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
+        #       }
+        #   ]
+#
+#}
 
 def move(teamkey, channelkey, userkey, position):
     cursor = app.mysql.connection.cursor()
