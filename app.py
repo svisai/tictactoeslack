@@ -72,11 +72,11 @@ def main():
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
     secondplayer = cursor.fetchone()
-    cursor.execute("INSERT INTO currentplayer (player_id, game_id".format(startplayer[0], gameid[0]))
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id) VALUES ({0}, {1})".format(startplayer[0], gameid[0]))
     app.mysql.connection.commit()
     cursor.execute("SELECT player_id FROM player WHERE player_name = {0}".format(user2_name))
     secondplayer = cursor.fetchone()
-    cursor.execute("INSERT INTO currentplayer (player_id, game_id".format(secondplayer[0], gameid[0]))
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id) VALUES ({0}, {1})".format(secondplayer[0], gameid[0]))
     app.mysql.connection.commit()
 
 
