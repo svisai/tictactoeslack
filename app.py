@@ -64,15 +64,14 @@ def help():
 def move(teamkey, channelkey, userkey, position):
     cursor = app.mysql.connection.cursor()
     user2_name = request.form['user_name']
-    position = int(position)
-    if position > 8:
-        return 'Position out of bounds'
-    cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
-
     if cursor.fetchone() is not None:
         cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(request.form['user_id'], user2_name))
     else:
         return 'Join a game to play'
+    position = int(position)
+    if position > 8:
+        return 'Position out of bounds'
+    cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
 
     #Verify existing game including requesting player
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
@@ -131,20 +130,58 @@ def printboard(teamkey, channelkey):
     cursor.close()
     b = list(b)
     res = ""
+    res += '\n'
+    res += '-------------'
+    res += '\n'
     res += '|'
     for i in range(0,3):
         res += b[i] + '|' + " "
     res += '\n'
+    res += '-------------'
+    res += '\n'
     res +=  '|'
     for i in range(3,6):
         res +=  b[i] + '|' + " "
-    res +=  '\n'
+    res += '\n'
+    res += '-------------'
+    res += '\n'
     res +=  '|'
     for i in range(6,9):
         res +=  b[i] + '|' + " "
-    res +=  '\n'
+    res += '\n'
+    res += '-------------'
+    res += '\n'
     return res
 
+def forfeit(channelkey, teamkey):
+    cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid, channelkey))
+    channelid = cursor.fetchone()
+    
+    cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
+    gameid = cursor.fetchone()
+    if gameid is not None:
+        cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
+    else:
+        return help()
+    cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid))
+    playerid = cursor.fetchall()
+    valid = 0
+    for res in playerid:
+        cursor.execute("SELECT * FROM player WHERE player_id = {0} AND player_name = {1}".format(res, form.request['user_name']))
+        p = cursor.fetchone()
+        if p is not None:
+            valid = 1
+    if valid == 0:
+        return 'Must be in a current game to forfeit'
+    data = {
+        "response_type": "in_channel",
+        "text": "<@{0}> has ended their tic tac toe game".format(form.request['user_name'])
+    }
+    resp = Response(json.dumps(data),  mimetype='application/json')
+    return resp
+
+                                                            
 def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text):
     user2_name = text[1]
     user2_name = user2_name[1:]
@@ -193,7 +230,7 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     cursor.close()
     data = {
         "response_type": "in_channel",
-        "text":"@{0} has started a game of tic tac toe with @{1}! Play your first move, <@{2}>.".format(user_name, user2_name, user_name)
+        "text":"<@{0}> has started a game of tic tac toe with <@{1}>! Play your first move, <@{2}>.".format(user_name, user2_name, user_name)
     }
 
     resp = Response(json.dumps(data),  mimetype='application/json')
