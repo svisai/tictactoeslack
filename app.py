@@ -117,11 +117,11 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
 
-    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {3})".format(startplayer[0], gameid[0], 1))
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {2})".format(startplayer[0], gameid[0], 1))
 
     cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(user2_name))
     secondplayer = cursor.fetchone()
-    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {3})".format(secondplayer[0], gameid[0], 2))
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {2})".format(secondplayer[0], gameid[0], 2))
 
 
     app.mysql.connection.commit()
