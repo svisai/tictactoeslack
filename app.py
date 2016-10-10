@@ -16,8 +16,8 @@ app.mysql.init_app(app)
 
 @app.route('/ttt', methods=['POST'])
 def main():
-    if(request.form['token'] != 'O8s7mBAq8Q3HvFj9lghw6RVI' or request.form['token'] != 'osSz1E86vqGCOJRp8f9nh1cu'):
-        return '403 Forbidden'
+    #if(request.form['token'] != 'O8s7mBAq8Q3HvFj9lghw6RVI' or request.form['token'] != 'osSz1E86vqGCOJRp8f9nh1cu'):
+    #   return '403 Forbidden'
     
     values = {}
     teamkey = request.form['team_id']
