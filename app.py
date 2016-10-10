@@ -59,7 +59,6 @@ def help():
                  "text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
                 }
             ]
-        
     }
 
 def move(teamkey, channelkey, userkey, position):
