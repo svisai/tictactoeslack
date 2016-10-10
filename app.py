@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 # Configure the MySQL Server
 app.mysql = MySQL()
-app.config['MYSQL_USER'] = os.environ['mysqluser']
-app.config['MYSQL_PASSWORD'] = os.environ['mysqlpassword']
-app.config['MYSQL_DB'] = os.environ['mysqldb']
-app.config['MYSQL_HOST'] = os.environ['mysqlhost']
+app.config['MYSQL_USER'] = os.environ.get('mysqluser')
+app.config['MYSQL_PASSWORD'] = os.environ.get('mysqlpassword')
+app.config['MYSQL_DB'] = os.environ.get('mysqldb')
+app.config['MYSQL_HOST'] = os.environ.get('mysqlhost')
 
 app.mysql.init_app(app)
 
@@ -31,6 +31,8 @@ def main():
     text = request.form['text']
     
     info = text.split()
+    if len(info < 1):
+        return help()
     func = info[0]
     if func == 'start':
         if(len(info) < 2):
@@ -39,7 +41,7 @@ def main():
     elif func == 'status':
         return printboard(teamkey, channelkey)
     elif func == 'move':
-        if(len(info) < 1):
+        if(len(info) < 2):
             return help()
         return move(teamkey, channelkey, userkey, info[1])
     elif func == 'help':
