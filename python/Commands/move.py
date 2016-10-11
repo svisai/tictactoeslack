@@ -77,14 +77,13 @@ def move(teamkey, channelkey, userkey, position, user2_name):
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over".format(user2_name)
 
-    b = printboard(teamkey, channelkey)
+    s = res + printboard(teamkey, channelkey)
     
     app.mysql.connection.commit()
     cursor.close()
     data = {
         "response_type": "in_channel",
-        "text":"{0}".format(res),
-        "attachments":[{"text":"{0}".format(b)}]
+        "text":s
     }
     return res
 
