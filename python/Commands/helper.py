@@ -71,6 +71,7 @@ def endgame(channelkey, teamkey):
     Ends current game by deleting game from database. Delete cascades for all current players
     """
     app = current_app._get_current_object()
+    cursor = app.mysql.connection.cursor()
     channelid = get_channelid(channelkey, teamkey)
     cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid))
     return
@@ -117,6 +118,8 @@ def get_playerid(userkey, teamkey):
     """
     Returns player_id associated with userkey and teamkey
     """
+    app = current_app._get_current_object()
+    cursor = app.mysql.connection.cursor()
     teamid = get_teamid(teamkey)
     cursor.execute("SELECT player_id FROM player WHERE team_id = {0} AND player_key = '{1}'".format(teamid, userkey))
     playerid = cursor.fetchone()
