@@ -126,11 +126,13 @@ def move(teamkey, channelkey, userkey, position):
     winner = 0
     if(num_moves > 2):
         winner = checkwin(position, boardsize, gameid, num_moves)
+        print "checkwin results: " + winner
     if(num_moves == 8 and winner == 0):
         endgame(channelkey, teamkey)
         res = 'There has been a tie. Game ended'
 
     if(winner):
+        print "final winner" + winner
         cursor.execute("UPDATE player SET total_wins=total_wins+1 WHERE player_id={0}".format(currentplayer[0]))
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over"
