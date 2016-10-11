@@ -83,7 +83,7 @@ def move(teamkey, channelkey, userkey, position, user2_name):
     cursor.close()
     data = {
         "response_type": "in_channel",
-        "text":"{0}".format(s)
+        "text":"'{0}'".format(s)
     }
     print s
     return res
