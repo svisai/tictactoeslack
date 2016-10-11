@@ -3,6 +3,7 @@ from helper import *
 from start import *
 from move import *
 from wins import *
+from forfeit import *
 main = Blueprint('main', __name__)
 
 def main(form):
@@ -43,7 +44,7 @@ def main(form):
         return forfeit(channelkey, teamkey, user_name)
     # Print total number of wins for this user
     elif func == 'wins':
-        return wins(userkey, teamkey)
+        return wins(user_name, userkey, teamkey)
     # Return help info to user
     elif func == 'help':
         return help()

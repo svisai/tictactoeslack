@@ -112,7 +112,8 @@ def move(teamkey, channelkey, userkey, position, user_name):
         "response_type": "in_channel",
         "text":"'{0}'".format(s)
     }
-    return data
+    resp = Response(json.dumps(data), mimetype='application/json')
+    return resp
 
 #increment for player1 (X) and decrement for player 2 (O)
 def checkwin(position, boardsize, gameid, playertype):

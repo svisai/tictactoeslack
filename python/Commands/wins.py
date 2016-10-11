@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from helper import *
 
-def wins(userkey, teamkey):
+def wins(username, userkey, teamkey):
     """
     Called on /ttt wins. Prints out the total number of wins for the requesting user. 
     If user has never played a game, returns this info.
