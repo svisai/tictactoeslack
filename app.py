@@ -143,6 +143,7 @@ def move(teamkey, channelkey, userkey, position):
     return res
 #increment for player1 (X) and decrement for player 2 (O)
 def checkwin(position, boardsize, gameid, num_moves):
+    cursor = app.mysql.connection.cursor()
     column = position % boardsize
     row = position / boardsize
     
@@ -192,6 +193,8 @@ def checkwin(position, boardsize, gameid, num_moves):
         win = 1
     elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
         win = 2
+    app.mysql.connection.commit()
+    cursor.close()
     return win
 
 def printboard(teamkey, channelkey):
