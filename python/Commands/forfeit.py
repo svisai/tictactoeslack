@@ -28,10 +28,13 @@ def forfeit(channelkey, teamkey, username):
     cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid))
     playerid = cursor.fetchall()
 
+    cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(username))
+    p = cursor.fetchone()
+    print p
+    print playerid
+
     valid = 0
     for res in playerid:
-        cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(username))
-        p = cursor.fetchone()
         if p[0] == res:
             valid = 1
     if valid == 0:
