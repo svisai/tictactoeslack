@@ -83,8 +83,9 @@ def move(teamkey, channelkey, userkey, position, user2_name):
     cursor.close()
     data = {
         "response_type": "in_channel",
-        "text":s
+        "text":"{0}".format(s)
     }
+    print s
     return res
 
 #increment for player1 (X) and decrement for player 2 (O)
