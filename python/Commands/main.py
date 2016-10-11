@@ -3,7 +3,7 @@ import helper
 import move
 main = Blueprint('main', __name__)
 
-def main():
+def main(form):
     #temp token will auth later
     #if(request.form['token'] != 'y' or request.form['token'] != 'x'):
     #   return '403 Forbidden'
