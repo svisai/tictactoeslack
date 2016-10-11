@@ -124,7 +124,7 @@ def move(teamkey, channelkey, userkey, position):
             cursor.execute("UPDATE game SET row0=row0+1 WHERE game_id={0}".format(gameid[0]))
         else:
             cursor.execute("UPDATE game SET row0=row0-1 WHERE game_id={0}".format(gameid[0]))
-        cursor.execute("SELECT diag0 FROM game WHERE game_id={1}".format(row, gameid[0]))
+        cursor.execute("SELECT diag0 FROM game WHERE game_id={0}".format(gameid[0]))
         res = cursor.fetchone()
         if(num_moves % 2 == 0 and res[0] == board_size):
             win = 1
@@ -137,7 +137,7 @@ def move(teamkey, channelkey, userkey, position):
             cursor.execute("UPDATE game SET row1=row1+1 WHERE game_id={0}".format(gameid[0]))
         else:
             cursor.execute("UPDATE game SET row1=row1-1 WHERE game_id={0}".format(gameid[0]))
-        cursor.execute("SELECT diag1 FROM game WHERE game_id={1}".format(row, gameid[0]))
+        cursor.execute("SELECT diag1 FROM game WHERE game_id={0}".format(gameid[0]))
         res = cursor.fetchone()
         if(num_moves % 2 == 0 and res[0] == board_size):
             win = 1
@@ -145,7 +145,7 @@ def move(teamkey, channelkey, userkey, position):
             win = 1
 
     if(num_moves % 2 == 0):
-        cursor.execute("UPDATE game SET {0}={1}+1 WHERE game_id={2}".format(row, row, gameid[0]))
+        cursor.execute("UPDATE game SET row{0}=row{1}+1 WHERE game_id={2}".format(row, row, gameid[0]))
         cursor.execute("UPDATE game SET column{0}=column{1}+1 WHERE game_id={2}".format(column, column, gameid[0]))
     else:
         cursor.execute("UPDATE game SET row{0}=row{1}-1 WHERE game_id={2}".format(row, row, gameid[0]))
