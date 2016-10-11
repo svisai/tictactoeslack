@@ -13,7 +13,7 @@ def wins(username, teamkey):
     cursor.close()
     data = {
         "response_type": "in_channel",
-        "text": "text":"<@{0}> has {1} tic tac toe wins! You go Glen Coco!".format(username, num_wins[0])
+        "text": "<@{0}> has {1} tic tac toe wins! You go Glen Coco!".format(username, num_wins[0])
     }
     resp = Response(json.dumps(data), mimetype='application/json')
     return resp
