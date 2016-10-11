@@ -77,11 +77,15 @@ def move(teamkey, channelkey, userkey, position, user2_name):
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over".format(user2_name)
 
-    res += printboard(teamkey, channelkey)
+    b += printboard(teamkey, channelkey)
     
     app.mysql.connection.commit()
     cursor.close()
-
+    data = {
+        "response_type": "in_channel",
+        "text":"{0}".format(res),
+        "attachments":["text":"{0}".format(b)]
+    }
     return res
 
 #increment for player1 (X) and decrement for player 2 (O)

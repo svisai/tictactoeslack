@@ -53,12 +53,7 @@ def printboard(teamkey, channelkey):
     res += '|---+---+---|'
     res += '\n'
     s = "```" + res + "```"
-    data = {
-        "response_type": "in_channel",
-        "text": s
-    }
-    resp = Response(json.dumps(data), mimetype='application/json')
-    return resp
+    return s
 
 def endgame(channelkey, teamkey):
     app = current_app._get_current_object()
