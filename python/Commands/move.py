@@ -147,12 +147,12 @@ def checkwin(position, boardsize, gameid, playertype):
     # Update diagonal value if position is in diagonal
     if(column == row):
         if(playertype == 1):
-            cursor.execute("UPDATE game SET diag0=diag0+1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag0=diag0+1 WHERE game_id={0}".format(gameid))
         else:
-            cursor.execute("UPDATE game SET diag0=diag0-1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag0=diag0-1 WHERE game_id={0}".format(gameid))
 
         # Check for winner
-        cursor.execute("SELECT diag0 FROM game WHERE game_id={0}".format(gameid[0]))
+        cursor.execute("SELECT diag0 FROM game WHERE game_id={0}".format(gameid))
         res = cursor.fetchone()
         if(playertype == 1 and res[0] == boardsize):
             win = 1
@@ -162,12 +162,12 @@ def checkwin(position, boardsize, gameid, playertype):
     # Update anti-diagonal value if position is in anti-diagonal
     elif(column == boardsize - row - 1):
         if(playertype == 1):
-            cursor.execute("UPDATE game SET diag1=diag1+1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag1=diag1+1 WHERE game_id={0}".format(gameid))
         else:
-            cursor.execute("UPDATE game SET diag1=diag1-1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag1=diag1-1 WHERE game_id={0}".format(gameid))
         
         # Check for winner
-        cursor.execute("SELECT diag1 FROM game WHERE game_id={0}".format(gameid[0]))
+        cursor.execute("SELECT diag1 FROM game WHERE game_id={0}".format(gameid))
         res = cursor.fetchone()
         if(playertype == 1 and res[0] == boardsize):
             win = 1
@@ -176,21 +176,21 @@ def checkwin(position, boardsize, gameid, playertype):
 
     # Update row and column values that position is in
     if(playertype == 1):
-        cursor.execute("UPDATE game SET row{0}=row{1}+1 WHERE game_id={2}".format(row, row, gameid[0]))
-        cursor.execute("UPDATE game SET column{0}=column{1}+1 WHERE game_id={2}".format(column, column, gameid[0]))
+        cursor.execute("UPDATE game SET row{0}=row{1}+1 WHERE game_id={2}".format(row, row, gameid))
+        cursor.execute("UPDATE game SET column{0}=column{1}+1 WHERE game_id={2}".format(column, column, gameid))
     else:
-        cursor.execute("UPDATE game SET row{0}=row{1}-1 WHERE game_id={2}".format(row, row, gameid[0]))
-        cursor.execute("UPDATE game SET column{0}=column{1}-1 WHERE game_id={2}".format(column, column, gameid[0]))
+        cursor.execute("UPDATE game SET row{0}=row{1}-1 WHERE game_id={2}".format(row, row, gameid))
+        cursor.execute("UPDATE game SET column{0}=column{1}-1 WHERE game_id={2}".format(column, column, gameid))
     
     # Check for a win in row or column
-    cursor.execute("SELECT row{0} FROM game WHERE game_id={1}".format(row, gameid[0]))
+    cursor.execute("SELECT row{0} FROM game WHERE game_id={1}".format(row, gameid))
     res = cursor.fetchone()
     if(playertype == 1 and res[0] == boardsize):
         win = 1
     elif(playertype == 2 and res[0] == boardsize * -1):
         win = 2
 
-    cursor.execute("SELECT column{0} FROM game WHERE game_id={1}".format(column, gameid[0]))
+    cursor.execute("SELECT column{0} FROM game WHERE game_id={1}".format(column, gameid))
     res = cursor.fetchone()
     if(playertype == 1 and res[0] == boardsize):
         win = 1
