@@ -100,10 +100,10 @@ def move(teamkey, channelkey, userkey, position):
     res = cursor.fetchone()
     board = res[0]
 
-    if board[position] != '0':
-        return 'The position you requested is occupied'
     if (num_moves % 2 == 0 and playertype != 1) or (num_moves % 2 == 1 and playertype != 2):
         return 'Please wait your turn'
+    if board[position] != '0':
+        return 'The position you requested is occupied'
 
     board = list(board)
     playernum = 0
@@ -124,8 +124,8 @@ def move(teamkey, channelkey, userkey, position):
 
     res = ""
     winner = 0
-    if(num_moves >= 3):
-        winner = checkwin(position, boardsize, gameid)
+    if(num_moves > 2):
+        winner = checkwin(position, boardsize, gameid, num_moves)
     if(num_moves == 8 and winner == 0):
         endgame(channelkey, teamkey)
         res = 'There has been a tie. Game ended'
@@ -134,7 +134,7 @@ def move(teamkey, channelkey, userkey, position):
         cursor.execute("UPDATE player SET total_wins=total_wins+1 WHERE player_id={0}".format(currentplayer[0]))
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over"
-    if(res != ""):
+    if(res == ""):
         return printboard(teamkey, channelkey)
 
     app.mysql.connection.commit()
@@ -142,7 +142,7 @@ def move(teamkey, channelkey, userkey, position):
 
     return res
 #increment for player1 (X) and decrement for player 2 (O)
-def checkwin(position, boardsize, gameid):
+def checkwin(position, boardsize, gameid, num_moves):
     column = position % boardsize
     row = position / boardsize
     
