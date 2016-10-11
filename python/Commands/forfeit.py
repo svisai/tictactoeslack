@@ -1,6 +1,7 @@
 from flask import *
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
+from helper import *
 
 def forfeit(channelkey, teamkey, username):
     """

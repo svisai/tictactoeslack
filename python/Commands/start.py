@@ -2,6 +2,7 @@ from flask import *
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import os
+from helper import *
 
 def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, text):
     """
