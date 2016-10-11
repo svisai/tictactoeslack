@@ -35,7 +35,7 @@ def forfeit(channelkey, teamkey, username):
 
     valid = 0
     for res in playerid:
-        if p[0] == res:
+        if p[0] == res[0]:
             valid = 1
     if valid == 0:
         data = {
