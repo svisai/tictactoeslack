@@ -3,20 +3,30 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 
 def forfeit(channelkey, teamkey, username):
-    app = current_app._get_current_object()
-    cursor = app.mysql.connection.cursor()
-    cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
-    teamid = cursor.fetchone()
-    cursor.execute("SELECT channel_id FROM channel WHERE team_id = {0} AND channel_key = '{1}'".format(teamid[0], channelkey))
-    channelid = cursor.fetchone()
+    """
+    Called on /ttt forfeit to terminate game. Ends game and returns user who ended game if valid
+    request, else returns reason for invalid request to user
+    """
+    channelid = get_channelid(channelkey, teamkey)
+    gameid = get_gameid(channelkey)
     
-    cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
-    gameid = cursor.fetchone()
+    # Check if game exists
     if gameid is None:
-        return 'No current game to forfeit'
+        data = {
+            "response_type": "ephemeral",
+            "text": "No game to forfeit. Start a game now with /ttt start @opponent!"
+        }
+        return Response(json.dumps(data),  mimetype='application/json')
     
-    cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid[0]))
+    # Get the global application object
+    app = current_app._get_current_object()
+    # Get the mysql object from app and create a connection
+    cursor = app.mysql.connection.cursor()
+    
+    # Ensure requesting player is in a current game
+    cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0}".format(gameid))
     playerid = cursor.fetchall()
+
     valid = 0
     for res in playerid:
         cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(username))
@@ -24,14 +34,22 @@ def forfeit(channelkey, teamkey, username):
         if p == res:
             valid = 1
     if valid == 0:
-        return 'Must be in a current game to forfeit'
-    
-    cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
+        data = {
+            "response_type": "ephemeral",
+            "text": "Must be in current game to forfeit. Start a game now with /ttt start @opponent!"
+        }
+        return Response(json.dumps(data),  mimetype='application/json')
+
+    # If valid request, end game
+    endgame(channelkey, teamkey)
+
     data = {
         "response_type": "in_channel",
         "text": "<@{0}> has ended their tic tac toe game".format(username)
     }
+
     resp = Response(json.dumps(data),  mimetype='application/json')
+    # Close connection
     app.mysql.connection.commit()
     cursor.close()
     return resp
