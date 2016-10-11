@@ -133,7 +133,7 @@ def move(teamkey, channelkey, userkey, position):
     if(winner):
         print "final winner"
         print winner
-        cursor.execute("UPDATE player SET total_wins=total_wins+1 WHERE player_id={0}".format(currentplayer[0]))
+        cursor.execute("UPDATE player SET total_wins=total_wins+1 WHERE player_id={0}".format(currplayer[0]))
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over"
     if(res == ""):
