@@ -45,7 +45,7 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     # Get player_id for first player, create new player entry if first game with this player
     playerid = get_playerid(userkey, teamkey)
     if playerid is None:
-        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, {4}, '{5}')".format(userkey, 0, 0, 0, teamid, user_name))
+        cursor.execute("INSERT INTO player (player_key, total_wins, team_id, player_name) VALUES ('{0}', {1}, {2},'{3}')".format(userkey, 0, teamid, user_name))
         playerid = get_playerid(userkey, teamkey)
 
     # Update player key in case player has been stored before as opponent, in which case the player will not have a player_key stored
@@ -54,7 +54,7 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     # Get player entry for second (opponent) player. If player does not exist, create entry. Player_key will be null as we don't know this player's key until this player makes a request
     cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
     if cursor.fetchone() is None:
-        cursor.execute("INSERT INTO player (player_key, total_wins, total_losses, total_ties, team_id, player_name) VALUES ('{0}', {1}, {2}, {3}, {4}, '{5}')".format("", 0, 0, 0, teamid, user2_name))
+        cursor.execute("INSERT INTO player (player_key, total_wins, team_id, player_name) VALUES ('{0}', {1}, {2},'{3}')".format("", 0, 0, 0, teamid, user2_name))
 
 
     channelid = get_channelid(channelkey, teamkey)
