@@ -110,7 +110,7 @@ def move(teamkey, channelkey, userkey, position, user_name):
     cursor.close()
     data = {
         "response_type": "in_channel",
-        "text":"'{0}'".format(s)
+        "text":"{0}".format(s)
     }
     resp = Response(json.dumps(data), mimetype='application/json')
     return resp
