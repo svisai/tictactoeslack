@@ -71,7 +71,7 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {2})".format(startplayer, gameid, 1))
     cursor.execute("SELECT player_id FROM player WHERE player_name = '{0}'".format(user2_name))
     secondplayer = cursor.fetchone()
-    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {2})".format(secondplayer, gameid, 2))
+    cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {2})".format(secondplayer[0], gameid, 2))
     
     # Close connection
     app.mysql.connection.commit()
