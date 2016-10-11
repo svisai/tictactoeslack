@@ -61,11 +61,11 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     startplayer = get_playerid(userkey, teamkey)
 
     # Create new game in this channel if one does not exist. If current game exists in this channel, delete this game and create new game with requested player and info.
-    gameid = get_gameid(channelkey)
+    gameid = get_gameid(channelkey, teamkey)
     if gameid is not None:
         endgame(channelkey, teamkey)
     cursor.execute("INSERT INTO game (channel_id, start_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})".format(channelid, startplayer, 3, '---------',5, 120, 0, 2, 0))
-    gameid = get_gameid(channelkey)
+    gameid = get_gameid(channelkey, teamkey)
 
     # Create current player entries for both requesting player and requested opponent
     cursor.execute("INSERT INTO currentplayer (player_id, game_id, entry_type) VALUES ({0}, {1}, {2})".format(startplayer, gameid, 1))
