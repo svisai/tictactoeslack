@@ -136,7 +136,7 @@ def update_game(channelkey, teamkey, new_board):
     app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()	
     cursor.execute("UPDATE game SET total_number_moves=total_number_moves+1 WHERE game_id={0}".format(gameid))
-    cursor.execute("UPDATE game SET game_board='{0}' WHERE game_id={1}".format(s, gameid))
+    cursor.execute("UPDATE game SET game_board='{0}' WHERE game_id={1}".format(new_board, gameid))
     app.mysql.connection.commit()
     cursor.close()
     return
