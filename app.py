@@ -15,7 +15,7 @@ app.config['MYSQL_HOST'] = os.environ.get('mysqlhost')
 
 app.mysql.init_app(app)
 
-@main.route('/ttt', methods=['POST'])
+@app.route('/ttt', methods=['POST'])
 def func():
     form = request.form
     return main(form)
