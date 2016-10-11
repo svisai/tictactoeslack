@@ -123,6 +123,7 @@ def move(teamkey, channelkey, userkey, position):
     cursor.execute("UPDATE game SET game_board='{0}' WHERE game_id={1}".format(s, gameid[0]))
 
     res = ""
+    winner = 0
     if(num_moves >= 3):
         winner = checkwin(position, boardsize, gameid)
     if(num_moves == 8 and winner == 0):
