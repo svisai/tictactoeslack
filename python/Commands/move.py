@@ -1,5 +1,5 @@
 from flask import *
-import helper
+from helper import *
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import os
