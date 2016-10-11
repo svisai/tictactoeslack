@@ -1,10 +1,12 @@
 from flask import *
 import helper
 from flask_mysqldb import MySQL
+import MySQLdb.cursors
 import os
 move = Blueprint('move', __name__)
 
 def move(teamkey, channelkey, userkey, position, user2_name):
+    app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
     
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
