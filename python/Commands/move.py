@@ -1,5 +1,8 @@
 from flask import *
 import helper
+from flask_mysqldb import MySQL
+import os
+from python.Commands.main import main
 move = Blueprint('move', __name__)
 
 def move(teamkey, channelkey, userkey, position, user2_name):

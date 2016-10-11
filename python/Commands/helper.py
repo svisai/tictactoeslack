@@ -1,3 +1,8 @@
+from flask import Flask, Response, render_template, json, request
+from flask_mysqldb import MySQL
+import os
+from python.Commands.main import main
+
 def help():
     data = {
         "response_type": "ephemeral",
@@ -13,6 +18,7 @@ def help():
 
 #increment for player1 (X) and decrement for player 2 (O)
 def checkwin(position, boardsize, gameid, num_moves):
+    app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
     column = position % boardsize
     row = position / boardsize
@@ -68,6 +74,7 @@ def checkwin(position, boardsize, gameid, num_moves):
     return win
 
 def printboard(teamkey, channelkey):
+    app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     teamid = cursor.fetchone()
@@ -108,6 +115,7 @@ def printboard(teamkey, channelkey):
     return res
 
 def endgame(channelkey, teamkey):
+    app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     teamid = cursor.fetchone()
@@ -117,6 +125,7 @@ def endgame(channelkey, teamkey):
     return 'Game ended'
 
 def forfeit(channelkey, teamkey, username):
+    app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     teamid = cursor.fetchone()
@@ -151,6 +160,7 @@ def forfeit(channelkey, teamkey, username):
 
 
 def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name, command, text):
+    app = current_app._get_current_object()
     user2_name = text[1]
     user2_name = user2_name[1:]
     cursor = app.mysql.connection.cursor()
