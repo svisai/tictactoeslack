@@ -18,7 +18,7 @@ def move(teamkey, channelkey, userkey, position, user_name):
 
     # Update playerkey if current player has not made request yet
     teamid = get_teamid(teamkey)
-    cursor.execute("SELECT player_key FROM player WHERE player_name = '{0}' AND team_id = '{1}'".format(user_name,teamid[0]))
+    cursor.execute("SELECT player_key FROM player WHERE player_name = '{0}' AND team_id = '{1}'".format(user_name,teamid))
     
     if cursor.fetchone() is None:
         cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(userkey, user_name))
