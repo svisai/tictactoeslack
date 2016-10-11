@@ -32,7 +32,7 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
 
     # Get team_id, create new team if first game in this team
     teamid = get_teamid(teamkey)
-    if cursor.fetchone() is None:
+    if teamid is None:
         cursor.execute("INSERT INTO team (team_key, team_domain) VALUES ('{0}', '{1}')".format(teamkey, team_domain))
         teamid = get_teamid(teamkey)
 
