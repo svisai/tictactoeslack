@@ -86,6 +86,8 @@ def get_teamid(teamkey):
     teamid = cursor.fetchone()
     app.mysql.connection.commit()
     cursor.close()
+    if(teamid is None):
+        return None
     return teamid[0]
 
 def get_channelid(channelkey, teamkey):
