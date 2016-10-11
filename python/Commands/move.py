@@ -2,9 +2,8 @@ from flask import *
 import helper
 move = Blueprint('move', __name__)
 
-def move(teamkey, channelkey, userkey, position):
+def move(teamkey, channelkey, userkey, position, user2_name):
     cursor = app.mysql.connection.cursor()
-    user2_name = request.form['user_name']
     
     cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
     teamid = cursor.fetchone()

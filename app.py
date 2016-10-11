@@ -20,4 +20,6 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port)
 
 @main.route('/ttt', methods=['POST'])
-main()
+def func():
+    form = request.form
+    return main(form)

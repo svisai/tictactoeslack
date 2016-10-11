@@ -8,14 +8,14 @@ def main():
     #if(request.form['token'] != 'y' or request.form['token'] != 'x'):
     #   return '403 Forbidden'
     values = {}
-    teamkey = request.form['team_id']
-    team_domain = request.form['team_domain']
-    channelkey = request.form['channel_id']
-    channel_name = request.form['channel_name']
-    userkey = request.form['user_id']
-    user_name = request.form['user_name']
-    command = request.form['command']
-    text = request.form['text']
+    teamkey = form['team_id']
+    team_domain = form['team_domain']
+    channelkey = form['channel_id']
+    channel_name = form['channel_name']
+    userkey = form['user_id']
+    user_name = form['user_name']
+    command = form['command']
+    text = form['text']
     
     info = text.split()
     if len(info) < 1:
@@ -30,7 +30,7 @@ def main():
     elif func == 'move':
         if len(info) < 2:
             return help()
-        return move(teamkey, channelkey, userkey, info[1])
+        return move(teamkey, channelkey, userkey, info[1], user_name)
     elif func == 'forfeit':
         return forfeit(channelkey, teamkey, user_name)
     elif func == 'help':
