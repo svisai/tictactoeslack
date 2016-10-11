@@ -165,7 +165,7 @@ def checkwin(position, boardsize, gameid, playertype):
             win = 2
 
     # Update anti-diagonal value if position is in anti-diagonal
-    elif(column == boardsize - row - 1):
+    if(column == boardsize - row - 1):
         if(playertype == 1):
             cursor.execute("UPDATE game SET diag1=diag1+1 WHERE game_id={0}".format(gameid))
         else:
