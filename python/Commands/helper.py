@@ -1,7 +1,6 @@
 from flask import Flask, Response, render_template, json, request
 from flask_mysqldb import MySQL
 import os
-from python.Commands.main import main
 
 def help():
     data = {
