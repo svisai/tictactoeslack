@@ -16,63 +16,6 @@ def help():
     resp = Response(json.dumps(data),  mimetype='application/json')
     return resp
 
-#increment for player1 (X) and decrement for player 2 (O)
-def checkwin(position, boardsize, gameid, num_moves):
-    app = current_app._get_current_object()
-    cursor = app.mysql.connection.cursor()
-    column = position % boardsize
-    row = position / boardsize
-    
-    win = 0
-    if(column == row):
-        if(num_moves % 2 == 0):
-            cursor.execute("UPDATE game SET diag0=diag0+1 WHERE game_id={0}".format(gameid[0]))
-        else:
-            cursor.execute("UPDATE game SET diag0=diag0-1 WHERE game_id={0}".format(gameid[0]))
-        cursor.execute("SELECT diag0 FROM game WHERE game_id={0}".format(gameid[0]))
-        res = cursor.fetchone()
-        if(num_moves % 2 == 0 and res[0] == boardsize):
-            win = 1
-        elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
-            win = 2
-
-
-    elif(column == boardsize - row - 1):
-        if(num_moves % 2 == 0):
-            cursor.execute("UPDATE game SET diag1=diag1+1 WHERE game_id={0}".format(gameid[0]))
-        else:
-            cursor.execute("UPDATE game SET diag1=diag1-1 WHERE game_id={0}".format(gameid[0]))
-        cursor.execute("SELECT diag1 FROM game WHERE game_id={0}".format(gameid[0]))
-        res = cursor.fetchone()
-        if(num_moves % 2 == 0 and res[0] == boardsize):
-            win = 1
-        elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
-            win = 2
-    
-    if(num_moves % 2 == 0):
-        cursor.execute("UPDATE game SET row{0}=row{1}+1 WHERE game_id={2}".format(row, row, gameid[0]))
-        cursor.execute("UPDATE game SET column{0}=column{1}+1 WHERE game_id={2}".format(column, column, gameid[0]))
-    else:
-        cursor.execute("UPDATE game SET row{0}=row{1}-1 WHERE game_id={2}".format(row, row, gameid[0]))
-        cursor.execute("UPDATE game SET column{0}=column{1}-1 WHERE game_id={2}".format(column, column, gameid[0]))
-    
-    #check win
-    cursor.execute("SELECT row{0} FROM game WHERE game_id={1}".format(row, gameid[0]))
-    res = cursor.fetchone()
-    if(num_moves % 2 == 0 and res[0] == boardsize):
-        win = 1
-    elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
-        win = 2
-    cursor.execute("SELECT column{0} FROM game WHERE game_id={1}".format(column, gameid[0]))
-    res = cursor.fetchone()
-    if(num_moves % 2 == 0 and res[0] == boardsize):
-        win = 1
-    elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
-        win = 2
-    app.mysql.connection.commit()
-    cursor.close()
-    return win
-
 def printboard(teamkey, channelkey):
     app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
