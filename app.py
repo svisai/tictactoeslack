@@ -154,9 +154,9 @@ def checkwin(position, boardsize, gameid, num_moves):
     win = 0
     if(column == row):
         if(num_moves % 2 == 0):
-            cursor.execute("UPDATE game SET row0=row0+1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag0=diag0+1 WHERE game_id={0}".format(gameid[0]))
         else:
-            cursor.execute("UPDATE game SET row0=row0-1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag0=diag0-1 WHERE game_id={0}".format(gameid[0]))
         cursor.execute("SELECT diag0 FROM game WHERE game_id={0}".format(gameid[0]))
         res = cursor.fetchone()
         if(num_moves % 2 == 0 and res[0] == boardsize):
@@ -167,9 +167,9 @@ def checkwin(position, boardsize, gameid, num_moves):
 
     elif(column == boardsize - row - 1):
         if(num_moves % 2 == 0):
-            cursor.execute("UPDATE game SET row1=row1+1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag1=diag1+1 WHERE game_id={0}".format(gameid[0]))
         else:
-            cursor.execute("UPDATE game SET row1=row1-1 WHERE game_id={0}".format(gameid[0]))
+            cursor.execute("UPDATE game SET diag1=diag1-1 WHERE game_id={0}".format(gameid[0]))
         cursor.execute("SELECT diag1 FROM game WHERE game_id={0}".format(gameid[0]))
         res = cursor.fetchone()
         if(num_moves % 2 == 0 and res[0] == boardsize):
