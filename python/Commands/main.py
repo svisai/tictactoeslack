@@ -33,6 +33,8 @@ def main(form):
         return move(teamkey, channelkey, userkey, info[1], user_name)
     elif func == 'forfeit':
         return forfeit(channelkey, teamkey, user_name)
+    elif func == 'wins':
+        return wins(user_name, teamkey)
     elif func == 'help':
         return help()
     else:

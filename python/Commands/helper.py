@@ -9,12 +9,21 @@ def help():
             "text": "How to use /ttt",
                 "attachments":[
                     {
-                    "text":"To start a game: /ttt start @user\n To make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
+                    "text":"To start a game: /ttt start @user\n To display current number of wins and make all your coworkers jealous: /ttt wins\nTo make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
                     }
                  ]
         }
     resp = Response(json.dumps(data),  mimetype='application/json')
     return resp
+
+def wins(username, teamkey):
+    app = current_app._get_current_object()
+    cursor = app.mysql.connection.cursor()
+    teamid = cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    num_wins = cursor.execute("SELECT total_wins FROM player WHERE team_id = {0} AND player_name = '{1}'".format(teamid[0], username))
+    app.mysql.connection.commit()
+    cursor.close()
+    return "<@{0}> has {1} tic tac toe wins! You go Glen Coco!".format(username, num_wins)
 
 def printboard(teamkey, channelkey):
     app = current_app._get_current_object()
@@ -34,28 +43,25 @@ def printboard(teamkey, channelkey):
     cursor.close()
     b = list(b)
     res = ""
-    res += '\n'
-    res += '-------------'
-    res += '\n'
-    res += '|'
+    res += '| '
     for i in range(0,3):
-        res += b[i] + '|' + " "
+        res += b[i] + " " + '| '
     res += '\n'
-    res += '-------------'
+    res += '|---+---+---|'
     res += '\n'
-    res +=  '|'
+    res +=  '| '
     for i in range(3,6):
-        res +=  b[i] + '|' + " "
+        res +=  b[i] + '| '
     res += '\n'
-    res += '-------------'
+    res += '|---+---+---|'
     res += '\n'
-    res +=  '|'
+    res +=  '| '
     for i in range(6,9):
-        res +=  b[i] + '|' + " "
+        res +=  b[i] + '| '
     res += '\n'
-    res += '-------------'
+    res += '|---+---+---|'
     res += '\n'
-    return res
+    return "```" + res + "```"
 
 def endgame(channelkey, teamkey):
     app = current_app._get_current_object()
@@ -135,7 +141,7 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     cursor.execute("SELECT * FROM game WHERE channel_id = {0}".format(channelid[0]))
     if cursor.fetchone() is not None:
         cursor.execute("DELETE FROM game WHERE channel_id = {0}".format(channelid[0]))
-    cursor.execute("INSERT INTO game (channel_id, start_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})".format(channelid[0], startplayer[0], 3, '000000000',5, 120, 0, 2, 0))
+    cursor.execute("INSERT INTO game (channel_id, start_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})".format(channelid[0], startplayer[0], 3, '---------',5, 120, 0, 2, 0))
 
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
