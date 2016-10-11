@@ -9,7 +9,7 @@ def forfeit(channelkey, teamkey, username):
     request, else returns reason for invalid request to user
     """
     channelid = get_channelid(channelkey, teamkey)
-    gameid = get_gameid(channelkey)
+    gameid = get_gameid(channelkey, teamkey)
     
     # Check if game exists
     if gameid is None:

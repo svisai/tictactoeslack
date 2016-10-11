@@ -22,7 +22,7 @@ def printboard(teamkey, channelkey):
     """
     Returns formatted current game board for printing
     """
-    gameid = get_gameid(channelkey)
+    gameid = get_gameid(channelkey, teamkey)
     
     # Get the global application object
     app = current_app._get_current_object()
@@ -101,11 +101,11 @@ def get_channelid(channelkey, teamkey):
     cursor.close()
     return channelid[0]
 
-def get_gameid(channelkey):
+def get_gameid(channelkey, teamkey):
     """
     Returns game_id associated with input of channelkey
     """
-    channelid = get_channelid(channelkey)
+    channelid = get_channelid(channelkey, teamkey)
     app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid))
@@ -127,12 +127,12 @@ def get_playerid(userkey, teamkey):
     cursor.close()
     return playerid[0]
 
-def update_game(channelkey, new_board):
+def update_game(channelkey, teamkey, new_board):
     """
     Given channelkey and new_board representing updated game board, 
     update total number of moves for game and board game 
     """
-    gameid = get_gameid(channelkey)
+    gameid = get_gameid(channelkey, teamkey)
     app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()	
     cursor.execute("UPDATE game SET total_number_moves=total_number_moves+1 WHERE game_id={0}".format(gameid))

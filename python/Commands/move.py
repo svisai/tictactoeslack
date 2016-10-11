@@ -24,7 +24,7 @@ def move(teamkey, channelkey, userkey, position, user_name):
         cursor.execute("UPDATE player SET player_key='{0}' WHERE player_name='{1}'".format(userkey, user_name))
     
     channelid = get_channelid(channelkey, teamkey)
-    gameid = get_gameid(channelkey)
+    gameid = get_gameid(channelkey, teamkey)
     playerid = get_playerid(userkey, teamkey)
 
     # Verify current game exists and current player is in game
@@ -83,7 +83,7 @@ def move(teamkey, channelkey, userkey, position, user_name):
 
     s = "".join(board)
     # Update board and total number of moves in database
-    update_game(channelkey, s)
+    update_game(channelkey, teamkey, s)
 
     # Call checkWin on current board to check if move is a winning move, or move resulted in draw
     res = ""
