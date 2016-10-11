@@ -99,6 +99,8 @@ def get_channelid(channelkey, teamkey):
     channelid = cursor.fetchone()
     app.mysql.connection.commit()
     cursor.close()
+    if(channelid is None):
+        return None
     return channelid[0]
 
 def get_gameid(channelkey, teamkey):
@@ -112,6 +114,8 @@ def get_gameid(channelkey, teamkey):
     gameid = cursor.fetchone()
     app.mysql.connection.commit()
     cursor.close()
+    if(gameid is None):
+        return None
     return gameid[0]
 
 def get_playerid(userkey, teamkey):
@@ -125,6 +129,8 @@ def get_playerid(userkey, teamkey):
     playerid = cursor.fetchone()
     app.mysql.connection.commit()
     cursor.close()
+    if(playerid is None):
+        return None
     return playerid[0]
 
 def update_game(channelkey, teamkey, new_board):
