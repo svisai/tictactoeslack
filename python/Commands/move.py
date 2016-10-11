@@ -84,7 +84,7 @@ def move(teamkey, channelkey, userkey, position, user2_name):
     data = {
         "response_type": "in_channel",
         "text":"{0}".format(res),
-        "attachments":["text":"{0}".format(b)]
+        "attachments":[{"text":"{0}".format(b)}]
     }
     return res
 
