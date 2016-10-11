@@ -105,7 +105,7 @@ def get_gameid(channelkey):
     """
     Returns game_id associated with input of channelkey
     """
-    channelid = get_channellid(channelkey)
+    channelid = get_channelid(channelkey)
     app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid))
