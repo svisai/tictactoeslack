@@ -102,11 +102,13 @@ def move(teamkey, channelkey, userkey, position, user_name):
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over\n".format(user_name)
 
+    s = ""
 
-    # Return win or draw result and updated board
-    st = printboard(teamkey, channelkey)
-    print st
-    s = res + ("{0}".format(st))
+    # Return win or draw result or updated board
+    if(res == ""):
+        s = printboard(teamkey, channelkey)
+    else:
+        s = res
 
     app.mysql.connection.commit()
     cursor.close()
