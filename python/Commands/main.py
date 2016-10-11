@@ -1,6 +1,6 @@
 from flask import *
-import helper
-import move
+from helper import *
+from move import *
 main = Blueprint('main', __name__)
 
 def main(form):
