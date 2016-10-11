@@ -131,11 +131,9 @@ def move(teamkey, channelkey, userkey, position):
         res = 'There has been a tie. Game ended'
 
     if(winner):
-        print "final winner"
-        print winner
         cursor.execute("UPDATE player SET total_wins=total_wins+1 WHERE player_id={0}".format(currplayer[0]))
         endgame(channelkey, teamkey)
-        res =  "<@{0}> won the game! Game over"
+        res =  "<@{0}> won the game! Game over".format(user2_name)
     if(res == ""):
         return printboard(teamkey, channelkey)
 
@@ -207,6 +205,8 @@ def printboard(teamkey, channelkey):
     channelid = cursor.fetchone()
     cursor.execute("SELECT game_id FROM game WHERE channel_id = {0}".format(channelid[0]))
     gameid = cursor.fetchone()
+    if gameid is None:
+        return help()
     cursor.execute("SELECT game_board FROM game WHERE game_id = {0}".format(gameid[0]))
     res = cursor.fetchone()
     b = res[0]
