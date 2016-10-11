@@ -104,8 +104,8 @@ def move(teamkey, channelkey, userkey, position, user_name):
 
 
     # Return win or draw result and updated board
-    str = printboard(teamkey, channelkey)
-    s = res + str
+    st = str(printboard(teamkey, channelkey))
+    s = res + st
 
     app.mysql.connection.commit()
     cursor.close()
