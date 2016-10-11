@@ -19,11 +19,13 @@ def help():
 def wins(username, teamkey):
     app = current_app._get_current_object()
     cursor = app.mysql.connection.cursor()
-    teamid = cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
-    num_wins = cursor.execute("SELECT total_wins FROM player WHERE team_id = {0} AND player_name = '{1}'".format(teamid[0], username))
+    cursor.execute("SELECT team_id FROM team WHERE team_key = '{0}'".format(teamkey))
+    teamid = cursor.fetchone()
+    cursor.execute("SELECT total_wins FROM player WHERE team_id = {0} AND player_name = '{1}'".format(teamid[0], username))
+    num_wins = cursor.fetchone()
     app.mysql.connection.commit()
     cursor.close()
-    return "<@{0}> has {1} tic tac toe wins! You go Glen Coco!".format(username, num_wins)
+    return "<@{0}> has {1} tic tac toe wins! You go Glen Coco!".format(username, num_wins[0])
 
 def printboard(teamkey, channelkey):
     app = current_app._get_current_object()
@@ -51,13 +53,13 @@ def printboard(teamkey, channelkey):
     res += '\n'
     res +=  '| '
     for i in range(3,6):
-        res +=  b[i] + '| '
+        res +=  b[i] + ' | '
     res += '\n'
     res += '|---+---+---|'
     res += '\n'
     res +=  '| '
     for i in range(6,9):
-        res +=  b[i] + '| '
+        res +=  b[i] + ' | '
     res += '\n'
     res += '|---+---+---|'
     res += '\n'

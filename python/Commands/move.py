@@ -44,7 +44,7 @@ def move(teamkey, channelkey, userkey, position, user2_name):
 
     if (num_moves % 2 == 0 and playertype != 1) or (num_moves % 2 == 1 and playertype != 2):
         return 'Please wait your turn'
-    if board[position] != '0':
+    if board[position] != '-':
         return 'The position you requested is occupied'
 
     board = list(board)
