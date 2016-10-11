@@ -3,7 +3,6 @@ import helper
 import move
 main = Blueprint('main', __name__)
 
-@main.route('/ttt', methods=['POST'])
 def main():
     #temp token will auth later
     #if(request.form['token'] != 'y' or request.form['token'] != 'x'):
