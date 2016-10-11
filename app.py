@@ -126,9 +126,9 @@ def move(teamkey, channelkey, userkey, position):
             cursor.execute("UPDATE game SET row0=row0-1 WHERE game_id={0}".format(gameid[0]))
         cursor.execute("SELECT diag0 FROM game WHERE game_id={0}".format(gameid[0]))
         res = cursor.fetchone()
-        if(num_moves % 2 == 0 and res[0] == board_size):
+        if(num_moves % 2 == 0 and res[0] == boardsize):
             win = 1
-        elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+        elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
             win = 1
 
 
@@ -139,9 +139,9 @@ def move(teamkey, channelkey, userkey, position):
             cursor.execute("UPDATE game SET row1=row1-1 WHERE game_id={0}".format(gameid[0]))
         cursor.execute("SELECT diag1 FROM game WHERE game_id={0}".format(gameid[0]))
         res = cursor.fetchone()
-        if(num_moves % 2 == 0 and res[0] == board_size):
+        if(num_moves % 2 == 0 and res[0] == boardsize):
             win = 1
-        elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+        elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
             win = 1
 
     if(num_moves % 2 == 0):
@@ -154,15 +154,15 @@ def move(teamkey, channelkey, userkey, position):
     #check win
     cursor.execute("SELECT row{0} FROM game WHERE game_id={1}".format(row, gameid[0]))
     res = cursor.fetchone()
-    if(num_moves % 2 == 0 and res[0] == board_size):
+    if(num_moves % 2 == 0 and res[0] == boardsize):
         win = 1
-    elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+    elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
         win = 1
     cursor.execute("SELECT column{0} FROM game WHERE game_id={1}".format(column, gameid[0]))
     res = cursor.fetchone()
-    if(num_moves % 2 == 0 and res[0] == board_size):
+    if(num_moves % 2 == 0 and res[0] == boardsize):
         win = 1
-    elif(num_moves % 2 == 1 and res[0] == board_size * -1):
+    elif(num_moves % 2 == 1 and res[0] == boardsize * -1):
         win = 1
         
     if(win):
