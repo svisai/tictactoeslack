@@ -77,7 +77,7 @@ def move(teamkey, channelkey, userkey, position, user2_name):
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over".format(user2_name)
 
-    b += printboard(teamkey, channelkey)
+    b = printboard(teamkey, channelkey)
     
     app.mysql.connection.commit()
     cursor.close()
