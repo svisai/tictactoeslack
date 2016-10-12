@@ -18,7 +18,7 @@ def help():
     resp = Response(json.dumps(data),  mimetype='application/json')
     return resp
 
-def printboard(teamkey, channelkey):
+def printboard(teamkey, channelkey, userkey):
     """
     Returns formatted current game board and which user has next turn
     """

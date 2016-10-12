@@ -100,22 +100,18 @@ def move(teamkey, channelkey, userkey, position, user_name):
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over\n".format(user_name)
 
-    s = ""
-
     # Return win or draw result or updated board
     if(res == ""):
-        s = printboard(teamkey, channelkey)
-    else:
-        s = res
+        # Update board and total number of moves in database
+        update_game(channelkey, teamkey, s)
 
-    # Update board and total number of moves in database
-    update_game(channelkey, teamkey, s)
+        app.mysql.connection.commit()
+        cursor.close()
+        return printboard(teamkey, channelkey, userkey)
 
-    app.mysql.connection.commit()
-    cursor.close()
     data = {
         "response_type": "in_channel",
-        "text":"{0}".format(s)
+        "text":"{0}".format(res)
     }
     resp = Response(json.dumps(data), mimetype='application/json')
     return resp
