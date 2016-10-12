@@ -34,7 +34,7 @@ def main(form):
     # Print game board
     elif func == 'status':
         num_moves = get_num_moves(channelkey, teamkey)
-        if(num_moves < 0)
+        if(num_moves < 0):
             return help()
         return printboard(teamkey, channelkey, num_moves)
     # Make a game move. Ensure position is specified, eg /ttt move [position]
