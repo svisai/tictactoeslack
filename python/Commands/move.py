@@ -47,9 +47,7 @@ def move(teamkey, channelkey, userkey, position, user_name):
         return Response(json.dumps(data),  mimetype='application/json')
 
     # Retrieve total number of moves in game, type of player, and game board
-    cursor.execute("SELECT total_number_moves FROM game WHERE game_id = {0}".format(gameid))
-    res = cursor.fetchone()
-    num_moves = res[0]
+    num_moves = get_num_moves(channelkey, teamkey)
 
     cursor.execute("SELECT entry_type FROM currentplayer WHERE player_id = {0} AND game_id = {1}".format(playerid, gameid))
     res = cursor.fetchone()
@@ -82,6 +80,8 @@ def move(teamkey, channelkey, userkey, position, user_name):
         board[position] = 'O'
 
     s = "".join(board)
+    # Update board and total number of moves in database
+    update_game(channelkey, teamkey, s)
 
     # Call checkWin on current board to check if move is a winning move, or move resulted in draw
     res = ""
@@ -100,14 +100,14 @@ def move(teamkey, channelkey, userkey, position, user_name):
         endgame(channelkey, teamkey)
         res =  "<@{0}> won the game! Game over\n".format(user_name)
 
+    # Close connection
+    app.mysql.connection.commit()
+    cursor.close()
+
     # Return win or draw result or updated board
     if(res == ""):
-        # Update board and total number of moves in database
-        update_game(channelkey, teamkey, s)
-
-        app.mysql.connection.commit()
-        cursor.close()
-        return printboard(teamkey, channelkey, userkey)
+        # Have to pass in num_moves - 1 to get the next player, as num_moves has already been incremented
+        return printboard(teamkey, channelkey, userkey, num_moves - 1)
 
     data = {
         "response_type": "in_channel",

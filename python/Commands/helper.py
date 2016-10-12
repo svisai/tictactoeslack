@@ -18,7 +18,7 @@ def help():
     resp = Response(json.dumps(data),  mimetype='application/json')
     return resp
 
-def printboard(teamkey, channelkey, userkey):
+def printboard(teamkey, channelkey, num_moves):
     """
     Returns formatted current game board and which user has next turn
     """
@@ -40,10 +40,7 @@ def printboard(teamkey, channelkey, userkey):
     cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0} AND entry_type = 2".format(gameid))
     player2 = cursor.fetchone()
 
-    cursor.execute("SELECT total_number_moves FROM game WHERE game_id = {0}".format(gameid))
-    num_moves = cursor.fetchone()
-
-    if(num_moves[0] % 2 == 0):
+    if(num_moves % 2 == 0):
         current = player1[0]
     else:
         current = player2[0]
@@ -178,3 +175,22 @@ def update_game(channelkey, teamkey, new_board):
     app.mysql.connection.commit()
     cursor.close()
     return
+
+def get_num_moves(channelkey, teamkey):
+    """
+    Given channelkey and teamkey,
+    return total number of moves made so far in current game in channel
+    """
+    gameid = get_gameid(channelkey, teamkey)
+    # Error check. Shouldn't hit this case
+    if gameid is None:
+        return -1
+    app = current_app._get_current_object()
+    cursor = app.mysql.connection.cursor()
+    # Retrieve total number of moves in game
+    cursor.execute("SELECT total_number_moves FROM game WHERE game_id = {0}".format(gameid))
+    res = cursor.fetchone()
+    num_moves = res[0]
+    app.mysql.connection.commit()
+    cursor.close()
+    return num_moves
