@@ -82,13 +82,14 @@ def printboard(teamkey, channelkey, userkey):
     res += '\n'
     res += '|---+---+---|'
     res += '\n'
+    res = ``` + res + ```
 
     data = {
         "response_type": "in_channel",
-        "text": "\n<@{0}> is playing next!".format(username[0]),
+        "text": res,
             "attachments":[
                 {
-                 "text":"{0}".format(res)
+                 "text":"\n<@{0}> is playing next!".format(username[0])
                 }
             ]
     }
