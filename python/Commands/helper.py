@@ -49,7 +49,7 @@ def printboard(teamkey, channelkey):
         current = player2[0]
 
     # Get user name of player who's turn is next
-    cursor.execute("SELECT player_name FROM player WHERE player_id = '{0}' AND game_id = {1}".format(current))
+    cursor.execute("SELECT player_name FROM player WHERE player_id = '{0}'".format(current))
     username = cursor.fetchone()
 
     # Get game board
