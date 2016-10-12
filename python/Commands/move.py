@@ -51,7 +51,7 @@ def move(teamkey, channelkey, userkey, position, user_name):
     res = cursor.fetchone()
     num_moves = res[0]
 
-    cursor.execute("SELECT entry_type FROM currentplayer WHERE player_id = {0}".format(playerid))
+    cursor.execute("SELECT entry_type FROM currentplayer WHERE player_id = {0} AND game_id = {1}".format(playerid, gameid))
     res = cursor.fetchone()
     playertype = res[0]
 
