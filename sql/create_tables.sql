@@ -23,9 +23,7 @@ create table player (
     player_id INTEGER NOT NULL AUTO_INCREMENT,
     PRIMARY KEY(player_id),
     player_key VARCHAR(20),
-    total_wins INTEGER,
-    total_losses INTEGER,
-    total_ties INTEGER
+    total_wins INTEGER DEFAULT 0,
     team_id INTEGER,
     player_name VARCHAR(20),
     FOREIGN KEY (team_id)
@@ -42,27 +40,21 @@ create table game (
     FOREIGN KEY (channel_id)
         REFERENCES channel(channel_id)
         ON DELETE CASCADE,
-    start_time DATETIME,
-    end_time DATETIME,
     start_player INTEGER,
     FOREIGN KEY (start_player)
         REFERENCES player(player_id)
         ON DELETE CASCADE,
     board_size INT,
-    game_board varchar(9),
-    time_limit_move INT,
-    time_limit_game INT,
-    result_id VARCHAR(20),
-    max_players INT,
+    game_board varchar(9) DEFAULT '---------',
     total_number_moves INT,
-    column0 INTEGER,
-    column1 INTEGER,
-    column2 INTEGER,
-    row0 INTEGER,
-    row1 INTEGER,
-    row2 INTEGER,
-    diag0 INTEGER,
-    diag1 INTEGER
+    column0 INTEGER DEFAULT 0,
+    column1 INTEGER DEFAULT 0,
+    column2 INTEGER DEFAULT 0,
+    row0 INTEGER DEFAULT 0,
+    row1 INTEGER DEFAULT 0,
+    row2 INTEGER DEFAULT 0,
+    diag0 INTEGER DEFAULT 0,
+    diag1 INTEGER DEFAULT 0
 );
 
 drop table if exists currentplayer;

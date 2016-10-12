@@ -45,16 +45,17 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     # Get player_id for first player, create new player entry if first game with this player
     playerid = get_playerid(userkey, teamkey)
     if playerid is None:
-        cursor.execute("INSERT INTO player (player_key, total_wins, team_id, player_name) VALUES ('{0}', {1}, {2},'{3}')".format(userkey, 0, teamid, user_name))
+        cursor.execute("INSERT INTO player (player_key, team_id, player_name) VALUES ('{0}', {1},'{2}')".format(userkey, teamid, user_name))
         playerid = get_playerid(userkey, teamkey)
 
     # Update player key in case player has been stored before as opponent, in which case the player will not have a player_key stored
     cursor.execute("UPDATE player SET player_key='{0}' WHERE player_id='{1}'".format(userkey, playerid))
 
-    # Get player entry for second (opponent) player. If player does not exist, create entry. Player_key will be null as we don't know this player's key until this player makes a request
+    # Get player entry for second (opponent) player. If player does not exist, create entry.
+    # Player_key will be null as we don't know this player's key until this player makes a request.
     cursor.execute("SELECT * FROM player WHERE player_name = '{0}'".format(user2_name))
     if cursor.fetchone() is None:
-        cursor.execute("INSERT INTO player (player_key, total_wins, team_id, player_name) VALUES ('{0}', {1}, {2},'{3}')".format("", 0, teamid, user2_name))
+        cursor.execute("INSERT INTO player (player_key, team_id, player_name) VALUES ('{0}', {1},'{2}')".format("", teamid, user2_name))
 
 
     channelid = get_channelid(channelkey, teamkey)
@@ -64,7 +65,7 @@ def startgame(teamkey, team_domain, channelkey, channel_name, userkey, user_name
     gameid = get_gameid(channelkey, teamkey)
     if gameid is not None:
         endgame(channelkey, teamkey)
-    cursor.execute("INSERT INTO game (channel_id, start_time, start_player, board_size, game_board, time_limit_move, time_limit_game, result_id, max_players, total_number_moves) VALUES ({0}, NOW(), {1}, {2}, '{3}', {4}, {5}, '{6}', {7}, {8})".format(channelid, startplayer, 3, '---------',5, 120, 0, 2, 0))
+    cursor.execute("INSERT INTO game (channel_id, start_player, board_size) VALUES ({0}, {1}, {2})".format(channelid, startplayer, 3))
     gameid = get_gameid(channelkey, teamkey)
 
     # Create current player entries for both requesting player and requested opponent
