@@ -82,7 +82,7 @@ def printboard(teamkey, channelkey, userkey):
     res += '\n'
     res += '|---+---+---|'
     res += '\n'
-    res = ``` + res + ```
+    res = "```" + res + "```"
 
     data = {
         "response_type": "in_channel",
