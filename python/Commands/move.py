@@ -82,8 +82,6 @@ def move(teamkey, channelkey, userkey, position, user_name):
         board[position] = 'O'
 
     s = "".join(board)
-    # Update board and total number of moves in database
-    update_game(channelkey, teamkey, s)
 
     # Call checkWin on current board to check if move is a winning move, or move resulted in draw
     res = ""
@@ -109,6 +107,9 @@ def move(teamkey, channelkey, userkey, position, user_name):
         s = printboard(teamkey, channelkey)
     else:
         s = res
+
+    # Update board and total number of moves in database
+    update_game(channelkey, teamkey, s)
 
     app.mysql.connection.commit()
     cursor.close()

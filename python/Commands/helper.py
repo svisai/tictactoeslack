@@ -11,7 +11,7 @@ def help():
             "text": "How to use /ttt",
                 "attachments":[
                     {
-                    "text":"To start a game: /ttt start @user\n To display current number of wins and make coworkers jealous: /ttt wins\nTo make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board: /ttt status"
+                    "text":"To start a game: /ttt start @user\n To display current number of wins and make coworkers jealous: /ttt wins\nTo make a move: /ttt move [position from 0 to 8]\n To end game: /ttt forfeit\n To display board and next player: /ttt status"
                     }
                  ]
         }
@@ -20,7 +20,7 @@ def help():
 
 def printboard(teamkey, channelkey):
     """
-    Returns formatted current game board for printing
+    Returns formatted current game board and which user has next turn
     """
     gameid = get_gameid(channelkey, teamkey)
     
@@ -32,7 +32,27 @@ def printboard(teamkey, channelkey):
     # If no current board, return help info
     if gameid is None:
         return help()
-    
+
+    # Query for current players
+    cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0} AND entry_type = 1".format(gameid))
+    player1 = cursor.fetchone()
+
+    cursor.execute("SELECT player_id FROM currentplayer WHERE game_id = {0} AND entry_type = 2".format(gameid))
+    player2 = cursor.fetchone()
+
+    cursor.execute("SELECT total_number_moves FROM game WHERE game_id = {0}".format(gameid))
+    num_moves = cursor.fetchone()
+
+    if(num_moves % 2 == 0):
+        current = player1[0]
+    else:
+        current = player2[0]
+
+    # Get user name of player who's turn is next
+    cursor.execute("SELECT player_name FROM player WHERE player_id = '{0}' AND game_id = {1}".format(current))
+    username = cursor.fetchone()
+
+
     # Get game board
     cursor.execute("SELECT game_board FROM game WHERE game_id = {0}".format(gameid))
     res = cursor.fetchone()
@@ -64,7 +84,7 @@ def printboard(teamkey, channelkey):
     res += '|---+---+---|'
     res += '\n'
     s = "```" + res + "```"
-    return s
+    return s + "\n<@{0}> is playing next!".format(username[0])
 
 def endgame(channelkey, teamkey):
     """
