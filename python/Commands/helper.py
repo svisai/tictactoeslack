@@ -43,7 +43,7 @@ def printboard(teamkey, channelkey):
     cursor.execute("SELECT total_number_moves FROM game WHERE game_id = {0}".format(gameid))
     num_moves = cursor.fetchone()
 
-    if(num_moves % 2 == 0):
+    if(num_moves[0] % 2 == 0):
         current = player1[0]
     else:
         current = player2[0]
@@ -51,7 +51,6 @@ def printboard(teamkey, channelkey):
     # Get user name of player who's turn is next
     cursor.execute("SELECT player_name FROM player WHERE player_id = '{0}' AND game_id = {1}".format(current))
     username = cursor.fetchone()
-
 
     # Get game board
     cursor.execute("SELECT game_board FROM game WHERE game_id = {0}".format(gameid))
