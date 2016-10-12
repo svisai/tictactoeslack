@@ -82,8 +82,18 @@ def printboard(teamkey, channelkey):
     res += '\n'
     res += '|---+---+---|'
     res += '\n'
-    s = "```" + res + "```"
-    return s + "\n<@{0}> is playing next!".format(username[0])
+
+    data = {
+        "response_type": "in_channel",
+        "text": "\n<@{0}> is playing next!".format(username[0]),
+            "attachments":[
+                {
+                 "text":"{0}".format(res)
+                }
+            ]
+    }
+    resp = Response(json.dumps(data),  mimetype='application/json')
+    return resp
 
 def endgame(channelkey, teamkey):
     """
