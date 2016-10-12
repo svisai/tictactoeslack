@@ -107,7 +107,7 @@ def move(teamkey, channelkey, userkey, position, user_name):
     # Return win or draw result or updated board
     if(res == ""):
         # Have to pass in num_moves - 1 to get the next player, as num_moves has already been incremented
-        return printboard(teamkey, channelkey, userkey, num_moves - 1)
+        return printboard(teamkey, channelkey, num_moves - 1)
 
     data = {
         "response_type": "in_channel",
