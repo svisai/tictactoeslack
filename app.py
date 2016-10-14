@@ -20,7 +20,7 @@ app.mysql.init_app(app)
 def func():
     form = request.form
     token = os.environ.get('token')
-    if(token != form['token'])
+    if(token != form['token']):
         data = {
             "response_type": "ephemeral",
             "text": "Forbidden",
