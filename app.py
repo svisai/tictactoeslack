@@ -19,6 +19,14 @@ app.mysql.init_app(app)
 @app.route('/ttt', methods=['POST'])
 def func():
     form = request.form
+    token = os.environ.get('token')
+    if(token != form['token'])
+        data = {
+            "response_type": "ephemeral",
+            "text": "Forbidden",
+        }
+        resp = Response(json.dumps(data),  status=403, mimetype='application/json')
+        return resp
     return main(form)
 
 if __name__ == '__main__':
